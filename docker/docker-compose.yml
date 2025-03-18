@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: symfony_app
+    restart: unless-stopped
+    working_dir: /var/www/symfony
+    volumes:
+      - ../:/var/www/symfony
+      - ./config/000-default.conf:/etc/apache2/sites-available/000-default.conf
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+    environment:
+      APP_ENV: dev
+      DATABASE_URL: "mysql://api_user:api_pass@mysql:3306/api_db"
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: api_db
+      MYSQL_USER: api_user
+      MYSQL_PASSWORD: api_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: symfony_pma
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root_pass
+    ports:
+      - "8081:80"
+
+volumes:
+  mysql_data:
