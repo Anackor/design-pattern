@@ -19,10 +19,19 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Domain/Entity/'
             - '../src/Kernel.php'
+
     App\Application\Service\UserService:
         arguments:
             $userRepository: '@App\Infrastructure\Repository\UserRepository'
-    
-    App\Infrastructure\Repository\UserRepository:
+
+    App\Application\Query\GetUserHandler:
         arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
+            - '@App\Domain\Repository\UserRepositoryInterface'
+
+    App\Infrastructure\Repository\UserRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineUserRepository
+
+    App\Infrastructure\Adapter\UserController:
+        autowire: true
+        autoconfigure: true
+        public: true

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\DataFixtures;
+namespace App\DataFixtures;
 
 use App\Domain\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -10,8 +10,12 @@ class UserFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $user1 = new User("John Doe", "john@example.com");
-        $user2 = new User("Jane Doe", "jane@example.com");
+        $user1 = (new User())
+            ->setName("John Smith")
+            ->setEmail("john@example.com");
+        $user2 = (new User())
+            ->setName("Jane Smith")
+            ->setEmail("jane@example.com");
 
         $manager->persist($user1);
         $manager->persist($user2);
