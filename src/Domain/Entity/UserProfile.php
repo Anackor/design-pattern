@@ -16,7 +16,7 @@ class UserProfile
 
     #[ORM\OneToOne(inversedBy: 'userProfile', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
@@ -27,19 +27,27 @@ class UserProfile
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_of_birth = null;
 
+    public function __construct(User $user, string $phoneNumber, string $address, \DateTimeInterface $birthDate)
+    {
+        $this->user = $user;
+        $this->phone = $phoneNumber;
+        $this->address = $address;
+        $this->date_of_birth = $birthDate;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(User $user_id): static
+    public function setUser(User $user): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }

@@ -28,8 +28,16 @@ services:
         arguments:
             - '@App\Domain\Repository\UserRepositoryInterface'
 
+    App\Application\BuilderUserProfile\CreateUserProfileHandler:
+        arguments:
+            - '@App\Domain\Repository\UserRepositoryInterface'
+            - '@App\Domain\Repository\UserProfileRepositoryInterface'
+
     App\Infrastructure\Repository\UserRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineUserRepository
+
+    App\Infrastructure\Repository\UserProfileRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineUserProfileRepository
 
     App\Infrastructure\Adapter\UserController:
         autowire: true
