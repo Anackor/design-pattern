@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Adapter;
 
-use App\Application\Query\GetUserQuery;
-use App\Application\Query\GetUserHandler;
+use App\Application\GetUser\GetUserQuery;
+use App\Application\GetUser\GetUserHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 

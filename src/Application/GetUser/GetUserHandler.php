@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Query;
+namespace App\Application\GetUser;
 
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Entity\User;

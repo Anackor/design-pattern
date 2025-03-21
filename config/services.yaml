@@ -24,7 +24,7 @@ services:
         arguments:
             $userRepository: '@App\Infrastructure\Repository\UserRepository'
 
-    App\Application\Query\GetUserHandler:
+    App\Application\GetUser\GetUserHandler:
         arguments:
             - '@App\Domain\Repository\UserRepositoryInterface'
 
