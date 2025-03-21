@@ -2,17 +2,13 @@
 
 namespace App\Application\Service;
 
-use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface as UserRepository;
 use App\Domain\Entity\User;
 
 class UserService
 {
-    private $userRepository;
-
-    public function __construct(UserRepositoryInterface $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
+    public function __construct(private UserRepository $userRepository)
+    {}
 
     public function createUser(string $name, string $email): User
     {
