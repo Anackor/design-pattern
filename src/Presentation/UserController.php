@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Adapter;
+namespace App\Presentation;
 
 use App\Application\GetUser\GetUserQuery;
 use App\Application\GetUser\GetUserHandler;

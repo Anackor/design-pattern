@@ -49,6 +49,9 @@ class User
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        // Using Fluent Interface enables chaining multiple setter calls in a single statement.
+        // Follow the usage example on src/DataFixtures/UserFixtures::load()
         return $this;
     }
 
