@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Adapter;
+namespace App\Presentation;
 
 use App\Application\DTO\UserProfileDTO;
 use App\Application\Handler\CreateUserProfileHandler;
@@ -22,7 +22,6 @@ class BuilderUserProfileController
         $data = json_decode($request->getContent(), true);
         $dto = new UserProfileDTO($id, $data['phone'] ?? null, $data['address'] ?? null, $data['birthdate'] ?? null);
 
-        // Validamos el DTO
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
             return new JsonResponse(['error' => (string) $errors], 400);

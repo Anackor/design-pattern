@@ -39,7 +39,7 @@ services:
     App\Infrastructure\Repository\UserProfileRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineUserProfileRepository
 
-    App\Infrastructure\Adapter\UserController:
+    App\Presentation\UserController:
         autowire: true
         autoconfigure: true
         public: true

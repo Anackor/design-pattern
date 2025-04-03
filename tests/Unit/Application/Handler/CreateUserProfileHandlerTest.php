@@ -2,7 +2,7 @@
 
 namespace App\Tests\Application\Handler;
 
-use App\Application\BuilderUserProfile\UserProfileDTO;
+use App\Application\DTO\UserProfileDTO;
 use App\Application\BuilderUserProfile\CreateUserProfileHandler;
 use App\Domain\Entity\User;
 use App\Domain\Enum\UserRole;

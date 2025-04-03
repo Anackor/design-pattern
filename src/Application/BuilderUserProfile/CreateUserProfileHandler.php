@@ -2,6 +2,7 @@
 
 namespace App\Application\BuilderUserProfile;
 
+use App\Application\DTO\UserProfileDTO;
 use App\Domain\Builder\UserProfileBuilder;
 use App\Domain\Repository\UserRepositoryInterface as UserRepository;
 use App\Domain\Repository\UserProfileRepositoryInterface as UserProfileRepository;
