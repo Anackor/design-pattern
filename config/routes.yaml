@@ -1,5 +1,5 @@
 controllers:
     resource:
-        path: ../src/Infrastructure/Adapter/
-        namespace: App\Infrastructure\Adapter
+        path: ../src/Presentation
+        namespace: App\Presentation
     type: attribute

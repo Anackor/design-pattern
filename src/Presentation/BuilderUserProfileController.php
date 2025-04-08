@@ -3,7 +3,7 @@
 namespace App\Presentation;
 
 use App\Application\DTO\UserProfileDTO;
-use App\Application\Handler\CreateUserProfileHandler;
+use App\Application\BuilderUserProfile\CreateUserProfileHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
