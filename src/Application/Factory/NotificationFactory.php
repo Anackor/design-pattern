@@ -15,10 +15,10 @@ class NotificationFactory
     public function create(NotificationRequestDTO $dto): NotificationInterface
     {
         return match ($dto->getChannel()) {
-            NotificationChannel::EMAIL => new EmailNotification($dto->getTitle(), $dto->getReceiver(), $dto->getMessage()),
-            NotificationChannel::SMS => new SmsNotification($dto->getTitle(), $dto->getReceiver(), $dto->getMessage()),
-            NotificationChannel::WEBHOOK => new WebhookNotification($dto->getTitle(), $dto->getReceiver(), $dto->getMessage()),
-            NotificationChannel::SLACK => new SlackNotification($dto->getTitle(), $dto->getReceiver(), $dto->getMessage())
+            NotificationChannel::EMAIL => new EmailNotification(),
+            NotificationChannel::SMS => new SmsNotification(),
+            NotificationChannel::WEBHOOK => new WebhookNotification(),
+            NotificationChannel::SLACK => new SlackNotification()
         };
     }
 }

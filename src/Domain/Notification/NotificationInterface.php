@@ -9,10 +9,10 @@ namespace App\Domain\Notification;
 interface NotificationInterface
 {
     /**
-     * Sends the notification message to the recipient
+     * Sends the notification message to the receiver
      * 
      * @param string $title The title of the message.
-     * @param string $recipient The recipient's identifier.
+     * @param string $receiver The receiver's identifier.
      * @param string $message The message to be sent.
      * @return bool True if the message was sent successfully, false otherwise.
      */

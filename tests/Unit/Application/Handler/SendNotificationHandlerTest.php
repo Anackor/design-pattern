@@ -2,15 +2,13 @@
 
 namespace App\Tests\Application\Handler;
 
-use App\Application\DTO\UserProfileDTO;
-use App\Application\BuilderUserProfile\CreateUserProfileHandler;
-use App\Domain\Entity\User;
-use App\Domain\Enum\UserRole;
-use App\Domain\Repository\UserRepositoryInterface as UserRepository;
-use App\Domain\Repository\UserProfileRepositoryInterface as UserProfileRepository;
+use App\Application\DTO\NotificationRequestDTO;
+use App\Application\Notification\SendNotificationHandler;
+use App\Domain\Factory\NotificationFactoryInterface;
+use App\Domain\Notification\NotificationInterface;
 use PHPUnit\Framework\TestCase;
 
-class CreateUserProfileHandlerTest extends TestCase
+class SendNotificationHandlerTest extends TestCase
 {
     public function testSendNotificationCallsCorrectInstance()
     {
@@ -18,23 +16,15 @@ class CreateUserProfileHandlerTest extends TestCase
         $notificationMock = $this->createMock(NotificationInterface::class);
         $notificationMock->expects($this->once())->method('send');
 
-        $factory = $this->createMock(NotificationFactory::class);
+        $factory = $this->createMock(NotificationFactoryInterface::class);
         $factory->method('create')->willReturn($notificationMock);
 
         $handler = new SendNotificationHandler($factory);
         $handler->handle($dto);
     }
 
-    public function testHandleReturnsNullIfUserNotFound()
-    {
-        $userRepository = $this->createMock(UserRepository::class);
-        $profileRepository = $this->createMock(UserProfileRepository::class);
-
-        $userRepository->method('findById')->willReturn(null);
-
-        $handler = new CreateUserProfileHandler($userRepository, $profileRepository);
-        $dto = new UserProfileDTO(99, '987654321', 'Unknown Street', '1999-05-15');
-
-        $this->assertNull($handler->handle($dto));
-    }
+    /**
+     * DTO Validation (NotificationRequestDTO) ensures that the data is valid before reaching the Handler or Factory.
+     * We do not need to create error paths in these tests, as invalid data will be caught during the DTO validation step.
+     */
 }
