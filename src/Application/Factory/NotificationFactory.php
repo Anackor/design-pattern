@@ -10,6 +10,14 @@ use App\Domain\Notification\SlackNotification;
 use App\Domain\Notification\SmsNotification;
 use App\Domain\Notification\WebhookNotification;
 
+/**
+ * This factory is responsible for creating instances of different types of notifications based on the provided input.
+ * This pattern encapsulates the object creation logic, promoting loose coupling and making the system easier to extend in the future
+ * adding new notification types without modifying existing code.
+ * 
+ * It also provides better maintainability by centralizing the creation process in a single location,
+ * reducing the risk of redundant or inconsistent object creation logic across the application.
+ */
 class NotificationFactory
 {
     public function create(NotificationRequestDTO $dto): NotificationInterface
