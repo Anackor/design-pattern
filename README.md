@@ -22,7 +22,7 @@ Ensure you have the following installed on your system:
 
 2. **Start Docker Containers**
    ```sh
-   docker-compose up -d
+   make start
 
 3. **Install PHP Dependencies (Inside Docker)**
    ```sh
@@ -42,7 +42,7 @@ Ensure you have the following installed on your system:
 
 7. **Check Tests**
    ```sh
-   php bin/phpunit
+   php .vendor/bin/phpunit
 
 ## Project Structure
    ```sh
