@@ -60,8 +60,9 @@ Ensure you have the following installed on your system:
    ├── Makefile                  # CLI automation commands (if applicable)
    ├── Tests/                    # Unit & Integration tests
    └── README.md
-   
-### Design Patterns Implemented
+   ```
+
+## Design Patterns Implemented
 The project follows a **modular DDD** structure with some design patterns. Below are the patterns implemented and their locations:
 
 - **Builder Pattern** (`src/Application/BuilderUserProfile/`)
