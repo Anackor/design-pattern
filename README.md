@@ -73,7 +73,7 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Factory Method** (`src/Application/Notification/SendNotificationHandler`)
     - Provides a way to instantiate objects without exposing the creation logic. 
 
-### Tips & Best Practices
+## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
 
