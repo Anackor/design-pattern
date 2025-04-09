@@ -79,10 +79,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
 
 - **Fluent Interface in Setters**
-Instead of traditional setters that return `void` we use a **Fluent Interface** by returning `$this`. This allows method chaining and improves readability.
-
-Example of **Fluent Interface** (`src/Domain/Entity/User`)
+   - Instead of traditional setters that return `void` we use a **Fluent Interface** by returning `$this`. This allows method chaining and improves readability.
+   - Example of **Fluent Interface** (`src/Domain/Entity/User`)
 
 - **DTOs**
-Encapsulate request data before passing it to handlers to ensure type safety and reduce Controller logic.
+   - Encapsulate request data before passing it to handlers to ensure type safety and reduce Controller logic.
 
