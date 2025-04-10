@@ -43,3 +43,19 @@ services:
         autowire: true
         autoconfigure: true
         public: true
+
+    # ABSTRACT FACTORY
+    App\Application\Factory\Form\HtmlFormFactory: ~
+    App\Application\Factory\Form\SlackFormFactory: ~
+    App\Application\Factory\Form\ConsoleFormFactory: ~
+
+    App\Application\Factory\Form\FormFactoryResolver:
+        arguments:
+            $htmlFactory: '@App\Application\Factory\Form\HtmlFormFactory'
+            $slackFactory: '@App\Application\Factory\Form\SlackFormFactory'
+            $consoleFactory: '@App\Application\Factory\Form\ConsoleFormFactory'
+    # /ABSTRACT FACTORY
+
+    App\Application\BuilderUserProfile\BuildFormHandler:
+        arguments:
+            - '@App\Application\Factory\Form\FormFactoryResolver'

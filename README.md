@@ -66,13 +66,16 @@ Ensure you have the following installed on your system:
 The project follows a **modular DDD** structure with some design patterns. Below are the patterns implemented and their locations:
 
 - **Builder Pattern** (`src/Application/BuilderUserProfile/`)
-    - Construct complex objects step by step
+   - Construct complex objects step by step
 
 - **Repository Pattern** (`src/Infrastructure/Persistence`)
-    - Separates database logic from business logic
+   - Separates database logic from business logic
 
 - **Factory Method** (`src/Application/Notification/SendNotificationHandler`)
-    - Provides a way to instantiate objects without exposing the creation logic. 
+   - Provides a way to instantiate objects without exposing the creation logic.
+
+- **Abstract Factory** (`src/Application/Factory/FormFactoryResolver`)
+   - A pattern used to create families of related objects without specifying their concrete classes.
 
 ## Tips & Best Practices
 
@@ -85,3 +88,11 @@ This sections provides useful tips and best practices followed in the project to
 - **DTOs**
    - Encapsulate request data before passing it to handlers to ensure type safety and reduce Controller logic.
 
+- **Dependency Injection**
+   - The project relies heavily on **Dependency Injection** to inject dependencies into classes, making tests easier as we can mock dependencies in unit tests and improves the flexibility of the code by reducing hard dependencies between classes.
+
+- **Separation of Concerns**
+   - Following the **Separation of Concerns** principle, the project separates different layers, such as application logic, domain logic, and infrastructure. This leads to a more modular and maintainable codebase, where changes in one layer do not affect others unnecessarily.
+
+- **Single Responsibility Principle**
+   - Each class should have one reason to change. In this project, we ensure that each class has a single responsibility, such as handlers focusing on business logic and factories on object creation. This separation of concerns leads to cleaner and more testable code.
