@@ -29,6 +29,13 @@ class FormFactoryResolver
         private ConsoleFormFactory $consoleFactory
     ) {}
 
+    /**
+     * Resolves the appropriate form factory based on the requested type.
+     * 
+     * @param string $type The form type (html, slack, or console).
+     * @return FormFactoryInterface The corresponding form factory.
+     * @throws InvalidArgumentException if the type is not recognized.
+     */
     public function get(string $type): FormFactoryInterface
     {
         return match ($type) {
