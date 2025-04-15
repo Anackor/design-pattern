@@ -2,13 +2,12 @@
 
 namespace App\Domain\Entity;
 
-use App\Domain\Prototype\PrototypeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: "product")]
-class Product implements PrototypeInterface
+class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
