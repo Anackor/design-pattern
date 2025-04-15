@@ -80,6 +80,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Prototype** (`src/Application/Product/CloneProductHandler`)
    - Clone objects rather than creating new instances. Useful when creating new objects is expensive or complex.
 
+- **Immutable Objects** (`src/Application/Document/UpdateDocumentContentHandler`)
+   - The **Immutable Objects** pattern is applied in this system by ensuring that every time the content of a document is updated, a new `DocumentVersion` is created. The `DocumentVersion` is an immutable object, meaning its state cannot be modified after creation. Each update results in the creation of a new `DocumentVersion` instance, preserving the original versions for historical tracking while reflecting the latest changes.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
@@ -104,3 +107,7 @@ This sections provides useful tips and best practices followed in the project to
 
 - **Single Responsibility Principle**
    - Each class should have one reason to change. In this project, we ensure that each class has a single responsibility, such as handlers focusing on business logic and factories on object creation. This separation of concerns leads to cleaner and more testable code.
+
+- **Mappers**
+   - A mapper converts raw DTOs into valid domain entities, encapsulating transformation logic and promoting cleaner architecture.
+   - Example of **Mapper** on (`src/Application/Mapper`)

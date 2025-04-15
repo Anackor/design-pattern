@@ -55,6 +55,9 @@ services:
     App\Infrastructure\Repository\CategoryRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineCategoryProfileRepository
 
+    App\Infrastructure\Repository\DocumentRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineDocumentProfileRepository
+
     App\Presentation\UserController:
         autowire: true
         autoconfigure: true
@@ -75,3 +78,18 @@ services:
     App\Application\BuilderUserProfile\BuildFormHandler:
         arguments:
             - '@App\Application\Factory\Form\FormFactoryResolver'
+
+    App\Application\Mapper\DocumentDTOMapper:
+        arguments:
+            - '@App\Domain\Repository\UserRepositoryInterface'
+            - '@App\Domain\Repository\DocumentRepositoryInterface'
+
+    App\Application\Document\CreateDocumentHandler:
+        arguments:
+            - '@App\Domain\Repository\DocumentRepositoryInterface'
+            - '@App\Application\Mapper\DocumentDTOMapper'
+
+    App\Application\Document\UpdateDocumentContentHandler:
+        arguments:
+            - '@App\Domain\Repository\DocumentRepositoryInterface'
+            - '@App\Application\Mapper\DocumentDTOMapper'

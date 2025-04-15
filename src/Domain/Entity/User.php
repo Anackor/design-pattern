@@ -34,9 +34,16 @@ class User
     #[ORM\OneToMany(targetEntity: UserOrders::class, mappedBy: 'user_id', orphanRemoval: true)]
     private Collection $userOrders;
 
+    /**
+     * @var Collection<int, Document>
+     */
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $documents;
+
     public function __construct()
     {
         $this->userOrders = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): int { return $this->id; }
@@ -69,8 +76,8 @@ class User
     public function setUserProfile(UserProfile $userProfile): static
     {
         // set the owning side of the relation if necessary
-        if ($userProfile->getUserId() !== $this) {
-            $userProfile->setUserId($this);
+        if ($userProfile->getUser() !== $this) {
+            $userProfile->setUser($this);
         }
 
         $this->userProfile = $userProfile;
@@ -116,6 +123,36 @@ class User
     public function setRole(UserRole $role): self
     {
         $this->role = $role;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Document>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): static
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): static
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getUser() === $this) {
+                $document->setUser(null);
+            }
+        }
+
         return $this;
     }
 }
