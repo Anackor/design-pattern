@@ -6,7 +6,8 @@ use App\Domain\Repository\DocumentVersionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: DocumentVersionRepository::class)]
+#[ORM\Entity]
+#[ORM\Table(name: "document_version")]
 class DocumentVersion
 {
     #[ORM\Id]

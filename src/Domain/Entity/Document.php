@@ -8,7 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: DocumentRepository::class)]
+#[ORM\Entity]
+#[ORM\Table(name: "document")]
 class Document
 {
     #[ORM\Id]
