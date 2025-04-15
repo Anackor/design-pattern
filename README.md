@@ -65,17 +65,20 @@ Ensure you have the following installed on your system:
 ## Design Patterns Implemented
 The project follows a **modular DDD** structure with some design patterns. Below are the patterns implemented and their locations:
 
-- **Builder Pattern** (`src/Application/BuilderUserProfile/`)
-   - Construct complex objects step by step
-
 - **Repository Pattern** (`src/Infrastructure/Persistence`)
-   - Separates database logic from business logic
+   - Separates database logic from business logic.
+
+- **Builder Pattern** (`src/Application/BuilderUserProfile/CreateUserProfileHandler`)
+   - Construct complex objects step by step.
 
 - **Factory Method** (`src/Application/Notification/SendNotificationHandler`)
    - Provides a way to instantiate objects without exposing the creation logic.
 
-- **Abstract Factory** (`src/Application/Factory/FormFactoryResolver`)
+- **Abstract Factory** (`src/Application/BuildForm/BuildFormHandler`)
    - A pattern used to create families of related objects without specifying their concrete classes.
+
+- **Prototype** (`src/Application/Product/CloneProductHandler`)
+   - Clone objects rather than creating new instances. Useful when creating new objects is expensive or complex.
 
 ## Tips & Best Practices
 
@@ -87,6 +90,11 @@ This sections provides useful tips and best practices followed in the project to
 
 - **DTOs**
    - Encapsulate request data before passing it to handlers to ensure type safety and reduce Controller logic.
+
+- **DTO Validation**
+   - We centralize our validation logic within **Data Transfer Objects** to ensure that the data passed between layers is correct and consistent.
+   - Example of **DTO Validation** in all DTOs (`src/Application/DTO`)
+   - We also do custom validations more complex with annotations as Category in the following example (`src/Application/DTO/ProductCloneDTO`) (`src/Application/Validator/Constraints/CategoryExistsValidator.php`)
 
 - **Dependency Injection**
    - The project relies heavily on **Dependency Injection** to inject dependencies into classes, making tests easier as we can mock dependencies in unit tests and improves the flexibility of the code by reducing hard dependencies between classes.

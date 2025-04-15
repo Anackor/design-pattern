@@ -20,6 +20,10 @@ services:
             - '../src/Domain/Entity/'
             - '../src/Kernel.php'
 
+    # Add validator as service (not necessary if using autowiring)
+    App\Application\Validator\Constraints\CategoryExistsValidator:
+        tags: ['validator.constraint_validator']
+
     App\Application\Service\UserService:
         arguments:
             $userRepository: '@App\Infrastructure\Repository\UserRepository'
@@ -27,6 +31,12 @@ services:
     App\Application\GetUser\GetUserHandler:
         arguments:
             - '@App\Domain\Repository\UserRepositoryInterface'
+
+    App\Application\Product\CloneProductHandler:
+        arguments:
+            - '@App\Domain\Repository\ProductRepositoryInterface'
+            - '@App\Domain\Repository\ProductRepositoryInterface'
+            - '@App\Application\Prototype\ProductCloner'
 
     App\Application\BuilderUserProfile\CreateUserProfileHandler:
         arguments:
@@ -38,6 +48,12 @@ services:
 
     App\Infrastructure\Repository\UserProfileRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineUserProfileRepository
+
+    App\Infrastructure\Repository\ProductRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineProductProfileRepository
+
+    App\Infrastructure\Repository\CategoryRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineCategoryProfileRepository
 
     App\Presentation\UserController:
         autowire: true
