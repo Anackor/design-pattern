@@ -83,6 +83,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Immutable Objects** (`src/Application/Document/UpdateDocumentContentHandler`)
    - The **Immutable Objects** pattern is applied in this system by ensuring that every time the content of a document is updated, a new `DocumentVersion` is created. The `DocumentVersion` is an immutable object, meaning its state cannot be modified after creation. Each update results in the creation of a new `DocumentVersion` instance, preserving the original versions for historical tracking while reflecting the latest changes.
 
+- **Singleton** (`src/Application/Template/RenderEmailTemplateHandler`)
+   - Singleton is a design pattern that ensures a class has only one instance and provides a global access point to it. It's useful for shared resources like configuration managers or loggers.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
