@@ -10,6 +10,6 @@ class GetOAuthConfigHandler
 {
     public function handle(GetOAuthConfigDTO $dto): OAuthConfig
     {
-        return OAuthConfigFactory::create($dto);
+        return OAuthConfigFactory::create($dto->getProvider());
     }
 }
