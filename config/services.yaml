@@ -93,3 +93,13 @@ services:
         arguments:
             - '@App\Domain\Repository\DocumentRepositoryInterface'
             - '@App\Application\Mapper\DocumentDTOMapper'
+
+    App\Infrastructure\Client\FtpClient:
+        arguments:
+            $host: '%env(FTP_HOST)%'
+            $user: '%env(FTP_USER)%'
+            $password: '%env(FTP_PASSWORD)%'
+
+    App\Infrastructure\FileStorage\FtpStorageAdapter:
+        arguments:
+            $client: '@App\Infrastructure\Client\FtpClient'
