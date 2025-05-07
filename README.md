@@ -86,6 +86,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Singleton** (`src/Application/Template/RenderEmailTemplateHandler`)
    - Singleton is a design pattern that ensures a class has only one instance and provides a global access point to it. It's useful for shared resources like configuration managers or loggers.
 
+- **Factory Function** (`src/Application/Auth/GetOAuthConfigHandler`)
+   - Factory Function pattern creates simple objects in a simple and centralized way, ideal for managing limited known variants without complex inheritance.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
