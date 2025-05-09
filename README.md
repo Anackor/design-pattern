@@ -89,6 +89,11 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Factory Function** (`src/Application/Auth/GetOAuthConfigHandler`)
    - Factory Function pattern creates simple objects in a simple and centralized way, ideal for managing limited known variants without complex inheritance.
 
+- **Adapter** (`src/Infrastructure/FileStorage/*`)
+   -  The Adapter pattern allows incompatible interfaces to work together by converting the interface of a class into one that clients expect. It acts as a bridge between two unrelated interfaces, promoting code reusability and decoupling.
+   It is commonly used when integrating third-party systems or legacy code into new architectures.
+
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
@@ -117,3 +122,7 @@ This sections provides useful tips and best practices followed in the project to
 - **Mappers**
    - A mapper converts raw DTOs into valid domain entities, encapsulating transformation logic and promoting cleaner architecture.
    - Example of **Mapper** on (`src/Application/Mapper`)
+
+- **Design Choice: When to Use Interfaces**
+   - We create interfaces (`src/Domain/Client/AwsS3ClientInterface`) only when dependency inversion is required — typically to mock external SDKs or complex clients in tests. For simpler wrappers like FtpClient (`src/Infrastructure/Client/FtpClient`), an interface isn't necessary unless multiple implementations are expected.
+
