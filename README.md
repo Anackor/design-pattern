@@ -62,6 +62,8 @@ Ensure you have the following installed on your system:
    └── README.md
    ```
 
+In some examples, you'll notice the absence of DTOs, Handlers, or Controllers. These components have already been demonstrated in earlier examples, and their patterns, benefits, and usage are considered established. To focus on core design patterns and avoid unnecessary duplication, the following examples will omit them unless their inclusion adds specific value.
+
 ## Design Patterns Implemented
 The project follows a **modular DDD** structure with some design patterns. Below are the patterns implemented and their locations:
 
