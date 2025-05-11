@@ -3,8 +3,9 @@
 namespace App\Tests\Unit\Infrastructure\FileStorage;
 
 use App\Domain\Client\AwsS3ClientInterface;
-use App\Infrastructure\Client\AwsS3StorageAdapter;
+use App\Infrastructure\FileStorage\AwsS3StorageAdapter;
 use PHPUnit\Framework\TestCase;
+use Aws\Result;
 
 class AwsS3StorageAdapterTest extends TestCase
 {
@@ -28,13 +29,15 @@ class AwsS3StorageAdapterTest extends TestCase
     public function testDownloadCallsGetObject(): void
     {
         $mockClient = $this->createMock(AwsS3ClientInterface::class);
+        $mockResult = new Result(['Body' => 'file content']);
+
         $mockClient->expects($this->once())
             ->method('getObject')
             ->with([
                 'Bucket' => 'my-bucket',
                 'Key'    => 'file.txt',
             ])
-            ->willReturn(['Body' => 'file content']);
+            ->willReturn($mockResult);
 
         $adapter = new AwsS3StorageAdapter($mockClient, 'my-bucket');
         $result = $adapter->download('file.txt');
