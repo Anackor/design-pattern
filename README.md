@@ -101,6 +101,8 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Composite** (`src/Application/Cart/Cart`)
    - The Composite Pattern allows treating individual objects and compositions of objects uniformly. It is particularly useful when dealing with tree structures such as file systems, UI hierarchies, or organizational charts. By defining a common interface for all components, the pattern enables clients to interact with both simple and complex elements in the same way.
 
+- **Decorator** (`src/Application/Logger/AbstractLoggerDecorator`)
+   - The Decorator pattern allows behavior to be added to individual objects dynamically without modifying their class. It wraps the original object in a new object (decorator) that enhances or overrides behavior, promoting flexibility and adherence to the Open/Closed Principle.
 
 ## Tips & Best Practices
 
