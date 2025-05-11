@@ -95,8 +95,11 @@ The project follows a **modular DDD** structure with some design patterns. Below
    -  The Adapter pattern allows incompatible interfaces to work together by converting the interface of a class into one that clients expect. It acts as a bridge between two unrelated interfaces, promoting code reusability and decoupling.
    It is commonly used when integrating third-party systems or legacy code into new architectures.
 
-- **Bridge** (`src\Application\Export\AbstractExporter`)
+- **Bridge** (`src/Application/Export/AbstractExporter`)
    - The Bridge pattern is a structural design pattern that separates an abstraction from its implementation, allowing both to vary independently. It is useful when you want to avoid a permanent link between classes and allow flexibility in how features are extended or combined.
+
+- **Composite** (`src/Application/Cart/Cart`)
+   - The Composite Pattern allows treating individual objects and compositions of objects uniformly. It is particularly useful when dealing with tree structures such as file systems, UI hierarchies, or organizational charts. By defining a common interface for all components, the pattern enables clients to interact with both simple and complex elements in the same way.
 
 
 ## Tips & Best Practices
