@@ -104,6 +104,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Decorator** (`src/Application/Logger/AbstractLoggerDecorator`)
    - The Decorator pattern allows behavior to be added to individual objects dynamically without modifying their class. It wraps the original object in a new object (decorator) that enhances or overrides behavior, promoting flexibility and adherence to the Open/Closed Principle.
 
+- **Facade** (`src/Application/Registration/UserRegistrationFacade`)
+   - The Facade pattern provides a simplified interface to a complex subsystem. It hides the complexities of multiple underlying classes by exposing a single unified interface, making it easier for clients to interact with the system.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
@@ -135,4 +138,7 @@ This sections provides useful tips and best practices followed in the project to
 
 - **Design Choice: When to Use Interfaces**
    - We create interfaces (`src/Domain/Client/AwsS3ClientInterface`) only when dependency inversion is required — typically to mock external SDKs or complex clients in tests. For simpler wrappers like FtpClient (`src/Infrastructure/Client/FtpClient`), an interface isn't necessary unless multiple implementations are expected.
+
+- **Handlers Instead Concrete Implementations** (`src/Application/Registration/UserRegistrationFacade`)
+   - To maintain a decoupled and testable architecture, we always interact with handlers rather than directly invoking concrete implementations of services or factories. Handlers serve as clear entry points to specific actions or workflows, encapsulating their dependencies and logic. This abstraction promotes single responsibility, facilitates dependency injection, and makes it easier to modify, test, or extend behavior without impacting the rest of the system.
 
