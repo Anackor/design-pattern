@@ -107,6 +107,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Facade** (`src/Application/Registration/UserRegistrationFacade`)
    - The Facade pattern provides a simplified interface to a complex subsystem. It hides the complexities of multiple underlying classes by exposing a single unified interface, making it easier for clients to interact with the system.
 
+- **Flyweight** (`src/Application/Service/UserImportService`)
+   - The Flyweight Pattern is a structural design pattern used to minimize memory usage by sharing as much data as possible with similar objects. It separates intrinsic (shared, immutable) state from extrinsic (context-specific) state, allowing objects with identical intrinsic state to be reused rather than duplicated. This is especially useful when dealing with large numbers of objects that share common data, improving performance and reducing resource consumption.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.

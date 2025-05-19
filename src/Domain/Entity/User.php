@@ -22,6 +22,12 @@ class User
     #[ORM\Column(type: "string", unique: true)]
     private string $email;
 
+    #[ORM\Column(type: "string", unique: false)]
+    private string $country;
+
+    #[ORM\Column(type: "string", unique: false)]
+    private string $type;
+
     #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
     private ?UserProfile $userProfile = null;
 
@@ -49,6 +55,8 @@ class User
     public function getId(): int { return $this->id; }
     public function getName(): string { return $this->name; }
     public function getEmail(): string { return $this->email; }
+    public function getCountry(): string { return $this->country; }
+    public function getType(): string { return $this->type; }
 
     /**
      * Setters with Fluent Interface
@@ -65,6 +73,18 @@ class User
     public function setEmail(string $email): self
     {
         $this->email = $email;
+        return $this;
+    }
+
+    public function setCountry(string $country): self
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
         return $this;
     }
 
