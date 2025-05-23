@@ -110,6 +110,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Flyweight** (`src/Application/Service/UserImportService`)
    - The Flyweight Pattern is a structural design pattern used to minimize memory usage by sharing as much data as possible with similar objects. It separates intrinsic (shared, immutable) state from extrinsic (context-specific) state, allowing objects with identical intrinsic state to be reused rather than duplicated. This is especially useful when dealing with large numbers of objects that share common data, improving performance and reducing resource consumption.
 
+- **Proxy** (`src\Application\Report\GenerateFinancialReportHandler.php`)
+   - The Proxy Pattern provides a surrogate or placeholder for another object to control access to it. It is commonly used to implement lazy loading, access control, logging, or remote proxies, without changing the original object's interface.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
