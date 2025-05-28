@@ -113,6 +113,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Proxy** (`src\Application\Report\GenerateFinancialReportHandler.php`)
    - The Proxy Pattern provides a surrogate or placeholder for another object to control access to it. It is commonly used to implement lazy loading, access control, logging, or remote proxies, without changing the original object's interface.
 
+- **Chain of Responsability** ()
+   - The Chain of Responsibility pattern decouples request senders from receivers by allowing multiple objects to handle the request in a sequence. Each handler decides whether to process the request or pass it along the chain, promoting flexibility and scalability in flow control.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
