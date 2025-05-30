@@ -107,7 +107,7 @@ services:
     # ReportServiceFactory
     App\Application\Report\ReportServiceFactory:
         arguments:
-        $userContext: '@App\Shared\Security\UserContext'
+            $userContext: '@App\Shared\Security\UserContext'
 
     # Configure the ReportInterface to be resolved using the factory
     App\Domain\Report\ReportInterface:
@@ -116,12 +116,16 @@ services:
     # Optionally, we can register the handler here if it's not already autowired
     App\Application\Report\GenerateFinancialReportHandler:
         arguments:
-        $report: '@App\Domain\Report\ReportInterface'
+            $report: '@App\Domain\Report\ReportInterface'
 
     App\Infrastructure\Security\AccessChecker:
         arguments:
-        $userContext: '@App\Shared\Security\UserContext'
+            $userContext: '@App\Shared\Security\UserContext'
 
     App\Shared\Security\UserContext:
         arguments:
-        $roles: ['ROLE_USER']
+            $roles: ['ROLE_USER']
+
+    App\Application\Customer\Command\SyncExternalCustomerDataCommand:
+        arguments:
+            $customerService: '@App\Application\Customer\Service\CustomerService'

@@ -116,6 +116,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Chain of Responsability** (`src\Application\Payment\Handler\ProcessPaymentHandler`)
    - The Chain of Responsibility pattern decouples request senders from receivers by allowing multiple objects to handle the request in a sequence. Each handler decides whether to process the request or pass it along the chain, promoting flexibility and scalability in flow control.
 
+- **Command** (`src\Command\CustomerInteractionCommand`)
+   - The Command Pattern encapsulates a request as an object, allowing parameterization of clients with different requests, queuing of operations, and support for undoable actions. It decouples the object that issues a request from the one that handles it, enabling more flexible and extensible software architectures.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
@@ -151,3 +154,5 @@ This sections provides useful tips and best practices followed in the project to
 - **Handlers Instead Concrete Implementations** (`src/Application/Registration/UserRegistrationFacade`)
    - To maintain a decoupled and testable architecture, we always interact with handlers rather than directly invoking concrete implementations of services or factories. Handlers serve as clear entry points to specific actions or workflows, encapsulating their dependencies and logic. This abstraction promotes single responsibility, facilitates dependency injection, and makes it easier to modify, test, or extend behavior without impacting the rest of the system.
 
+- **PHPDoc type hinting** (`src\Command\CustomerInteractionCommand.php`)
+   - We use `/** @var ClassName $variable */` annotations to help static analysis tools and IDEs understand the expected type of a variable, especially when the type cannot be inferred automatically (e.g. when using helper methods or dependency injection containers). This improves code readability, auto-completion, and error detection during development.
