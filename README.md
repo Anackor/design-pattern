@@ -119,6 +119,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Command** (`src\Command\CustomerInteractionCommand`)
    - The Command Pattern encapsulates a request as an object, allowing parameterization of clients with different requests, queuing of operations, and support for undoable actions. It decouples the object that issues a request from the one that handles it, enabling more flexible and extensible software architectures.
 
+- **Iterator** (``)
+   - The Iterator pattern provides a standard way to traverse elements in a collection without exposing its internal structure. It enhances flexibility and encapsulation when dealing with different types of iterable data sources.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
