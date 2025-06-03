@@ -122,7 +122,7 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Iterator** (`src\Application\CsvImport\CsvFileIterator`)
    - The Iterator pattern provides a standard way to traverse elements in a collection without exposing its internal structure. It enhances flexibility and encapsulation when dealing with different types of iterable data sources.
 
-- **Mediator** (``)
+- **Mediator** (`src\Application\Chat\ChatRoom`)
    - The Mediator Pattern centralizes communication between objects by introducing a mediator that handles interactions. This reduces direct dependencies between components, simplifies collaboration, and improves code maintainability. It is useful when multiple components need to coordinate behavior without being tightly coupled.
 
 ## Tips & Best Practices
