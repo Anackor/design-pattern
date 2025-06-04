@@ -128,6 +128,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Memento** (`src\Application\FormWizard\FormWizard`)
    - The Memento pattern captures and restores an object's internal state without violating encapsulation. It is particularly useful for preserving snapshots of state, enabling undo operations, and improving the separation of concerns between objects managing state and those requesting its preservation.
 
+- **Observer** (``)
+   - The Observer pattern establishes a one-to-many dependency between objects so that when one object changes its state, all its dependents are automatically notified. It promotes loose coupling and is useful for implementing reactive systems or event-driven architectures.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
