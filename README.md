@@ -125,6 +125,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Mediator** (`src\Application\Chat\ChatRoom`)
    - The Mediator Pattern centralizes communication between objects by introducing a mediator that handles interactions. This reduces direct dependencies between components, simplifies collaboration, and improves code maintainability. It is useful when multiple components need to coordinate behavior without being tightly coupled.
 
+- **Memento** (`src\Application\FormWizard\FormWizard`)
+   - The Memento pattern captures and restores an object's internal state without violating encapsulation. It is particularly useful for preserving snapshots of state, enabling undo operations, and improving the separation of concerns between objects managing state and those requesting its preservation.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
