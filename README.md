@@ -42,7 +42,7 @@ Ensure you have the following installed on your system:
 
 7. **Check Tests**
    ```sh
-   php .vendor/bin/phpunit
+   php ./vendor/bin/phpunit
 
 ## Project Structure
    ```sh
@@ -128,8 +128,11 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Memento** (`src\Application\FormWizard\FormWizard`)
    - The Memento pattern captures and restores an object's internal state without violating encapsulation. It is particularly useful for preserving snapshots of state, enabling undo operations, and improving the separation of concerns between objects managing state and those requesting its preservation.
 
-- **Observer** (``)
+- **Observer** (`src\Application\UserActivity\UserActionSubject`)
    - The Observer pattern establishes a one-to-many dependency between objects so that when one object changes its state, all its dependents are automatically notified. It promotes loose coupling and is useful for implementing reactive systems or event-driven architectures.
+
+- **State** (`src\Domain\Order\OrderStateInterface`)
+   - The State pattern allows an object to alter its behavior when its internal state changes. It helps encapsulate state-specific logic into separate classes, making the code easier to extend and maintain. This pattern is especially useful for workflows where objects transition through well-defined states.
 
 ## Tips & Best Practices
 
