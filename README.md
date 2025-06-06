@@ -140,6 +140,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Template Method** (`src\Application\Approval\RequestApproval`)
    - Defines the skeleton of an algorithm in the method, allowing subclasses to implement specific steps of the algorithm without changing its structure. This pattern promotes code reuse and allows customization of specific steps while maintaining the overall algorithm.
 
+- **Visitor** (`src\Domain\Product\ShoppingCart`)
+   - The Visitor pattern is used to apply dynamic and flexible discount logic to various types of products or services in a system. It allows us to define a set of discount strategies and apply them without modifying the underlying product or service classes. By using the Visitor pattern, we can add new types of discounts or promotions with minimal changes to existing code, making it easy to extend the system with new discount rules in the future.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
