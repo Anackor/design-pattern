@@ -134,7 +134,7 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **State** (`src\Domain\Order\OrderStateInterface`)
    - The State pattern allows an object to alter its behavior when its internal state changes. It helps encapsulate state-specific logic into separate classes, making the code easier to extend and maintain. This pattern is especially useful for workflows where objects transition through well-defined states.
 
-- **Strategy** (``)
+- **Strategy** (`src\Domain\Sort\SortStrategyInterface`)
    - The Strategy Pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable. It allows the algorithm to be selected at runtime, without altering the context. It promotes flexibility and extensibility in your code, especially when multiple algorithms perform the same task, and you need to switch them based on certain conditions.
 
 ## Tips & Best Practices
