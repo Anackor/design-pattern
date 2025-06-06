@@ -137,6 +137,9 @@ The project follows a **modular DDD** structure with some design patterns. Below
 - **Strategy** (`src\Domain\Sort\SortStrategyInterface`)
    - The Strategy Pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable. It allows the algorithm to be selected at runtime, without altering the context. It promotes flexibility and extensibility in your code, especially when multiple algorithms perform the same task, and you need to switch them based on certain conditions.
 
+- **Template Method** (`src\Application\Approval\RequestApproval`)
+   - Defines the skeleton of an algorithm in the method, allowing subclasses to implement specific steps of the algorithm without changing its structure. This pattern promotes code reuse and allows customization of specific steps while maintaining the overall algorithm.
+
 ## Tips & Best Practices
 
 This sections provides useful tips and best practices followed in the project to ensure clean, mantainable and scalable code.
