@@ -10,7 +10,7 @@ services:
       - ../:/var/www/symfony
       - ./config/000-default.conf:/etc/apache2/sites-available/000-default.conf
     ports:
-      - "8000:8000"
+      - "8000:80"
     depends_on:
       - mysql
     environment:

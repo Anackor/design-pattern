@@ -5,6 +5,7 @@ namespace App\Application\Factory;
 use App\Application\DTO\NotificationRequestDTO;
 use App\Domain\Enum\NotificationChannel;
 use App\Domain\Notification\EmailNotification;
+use App\Domain\Factory\NotificationFactoryInterface;
 use App\Domain\Notification\NotificationInterface;
 use App\Domain\Notification\SlackNotification;
 use App\Domain\Notification\SmsNotification;
@@ -18,7 +19,7 @@ use App\Domain\Notification\WebhookNotification;
  * It also provides better maintainability by centralizing the creation process in a single location,
  * reducing the risk of redundant or inconsistent object creation logic across the application.
  */
-class NotificationFactory
+class NotificationFactory implements NotificationFactoryInterface
 {
     public function create(NotificationRequestDTO $dto): NotificationInterface
     {

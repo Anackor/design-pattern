@@ -26,7 +26,7 @@ services:
 
     App\Application\Service\UserService:
         arguments:
-            $userRepository: '@App\Infrastructure\Repository\UserRepository'
+            $userRepository: '@App\Domain\Repository\UserRepositoryInterface'
 
     App\Application\GetUser\GetUserHandler:
         arguments:
@@ -35,7 +35,7 @@ services:
     App\Application\Product\CloneProductHandler:
         arguments:
             - '@App\Domain\Repository\ProductRepositoryInterface'
-            - '@App\Domain\Repository\ProductRepositoryInterface'
+            - '@App\Domain\Repository\CategoryRepositoryInterface'
             - '@App\Application\Prototype\ProductCloner'
 
     App\Application\BuilderUserProfile\CreateUserProfileHandler:
@@ -43,25 +43,27 @@ services:
             - '@App\Domain\Repository\UserRepositoryInterface'
             - '@App\Domain\Repository\UserProfileRepositoryInterface'
 
-    App\Infrastructure\Repository\UserRepositoryInterface:
+    App\Domain\Repository\UserRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineUserRepository
 
-    App\Infrastructure\Repository\UserProfileRepositoryInterface:
+    App\Domain\Repository\UserProfileRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineUserProfileRepository
 
-    App\Infrastructure\Repository\ProductRepositoryInterface:
-        alias: App\Infrastructure\Persistence\DoctrineProductProfileRepository
+    App\Domain\Repository\ProductRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineProductRepository
 
-    App\Infrastructure\Repository\CategoryRepositoryInterface:
-        alias: App\Infrastructure\Persistence\DoctrineCategoryProfileRepository
+    App\Domain\Repository\CategoryRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineCategoryRepository
 
-    App\Infrastructure\Repository\DocumentRepositoryInterface:
-        alias: App\Infrastructure\Persistence\DoctrineDocumentProfileRepository
+    App\Domain\Repository\DocumentRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineDocumentRepository
 
-    App\Presentation\UserController:
-        autowire: true
-        autoconfigure: true
-        public: true
+    App\Domain\Factory\NotificationFactoryInterface:
+        alias: App\Application\Factory\NotificationFactory
+
+    App\Presentation\:
+        resource: '../src/Presentation/'
+        tags: ['controller.service_arguments']
 
     # ABSTRACT FACTORY
     App\Application\Factory\Form\HtmlFormFactory: ~
