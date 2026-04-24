@@ -6,15 +6,15 @@ namespace App\Application\Approval;
  * Class VacationRequestApproval
  *
  * This concrete class implements the specific steps for processing a vacation request.
- * It overrides the abstract methods defined in the RequestApproval template class 
+ * It overrides the abstract methods defined in the RequestApproval template class
  * to provide custom logic for reviewing and approving vacation requests.
  *
- * In the reviewRequest method, we might check if the employee has enough vacation days left 
- * and if the timing of the request aligns with company policies. In the approveOrReject 
+ * In the reviewRequest method, we might check if the employee has enough vacation days left
+ * and if the timing of the request aligns with company policies. In the approveOrReject
  * method, we determine whether the vacation is approved based on these criteria.
  *
- * The Template Method design pattern allows for the reusability of the common steps (like 
- * receiving the request), while enabling the customization of the review and decision 
+ * The Template Method design pattern allows for the reusability of the common steps (like
+ * receiving the request), while enabling the customization of the review and decision
  * steps for specific request types like vacation requests.
  */
 class VacationRequestApproval extends RequestApproval

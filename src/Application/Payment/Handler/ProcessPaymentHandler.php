@@ -15,7 +15,7 @@ use App\Application\Payment\Validator\TypeValidator;
  * This pattern is particularly useful when you have a series of steps that need to be executed in a particular order and some steps can be optional or conditional.
  * It promotes flexibility by allowing handlers to be added, removed, or re-ordered without changing the core logic.
  *
- * In this implementation, each validator (e.g., `CardNumberValidator`, `PaymentMethodValidator`, `BalanceValidator`) represents a handler in the chain. 
+ * In this implementation, each validator (e.g., `CardNumberValidator`, `PaymentMethodValidator`, `BalanceValidator`) represents a handler in the chain.
  * The request starts with the first handler, which either processes the request or passes it to the next handler in the chain.
  * If any handler fails its validation, the request is rejected early and no further handlers are called.
  *

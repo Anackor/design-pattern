@@ -11,9 +11,9 @@ use App\Shared\Security\UserContext;
 
 /**
  * ReportServiceFactory - Factory to create the appropriate proxy for report generation.
- * 
+ *
  * This factory is responsible for deciding which type of proxy should be created
- * based on the provided parameters. It helps encapsulate the logic of creating 
+ * based on the provided parameters. It helps encapsulate the logic of creating
  * either a ReportProxy (with LazyReportProxy and AccessChecker) for report generation.
  */
 class ReportServiceFactory

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Domain\Client;
+
 use Aws\Result;
 
 /**

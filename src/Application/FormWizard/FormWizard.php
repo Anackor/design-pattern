@@ -4,14 +4,14 @@ namespace App\Application\FormWizard;
 
 /**
  * The Memento pattern is a behavioral design pattern that allows an object to save and restore its state without violating encapsulation.
- * It involves three main roles: the Originator (the object whose state needs saving), the Memento (which stores the state), 
+ * It involves three main roles: the Originator (the object whose state needs saving), the Memento (which stores the state),
  * and the Caretaker (which manages the saving and restoring process).
  *
- * This pattern is useful when implementing undo/redo mechanisms, checkpoints, or rollback features, especially in workflows 
- * where state evolves step by step. By keeping the internal details hidden, it ensures encapsulation while offering flexibility 
+ * This pattern is useful when implementing undo/redo mechanisms, checkpoints, or rollback features, especially in workflows
+ * where state evolves step by step. By keeping the internal details hidden, it ensures encapsulation while offering flexibility
  * in navigating through historical states.
- * 
- * 
+ *
+ *
  * The Originator in the Memento pattern:
  *
  * This class holds the internal state of the form wizard and is responsible

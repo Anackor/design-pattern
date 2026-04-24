@@ -9,10 +9,10 @@ class FileOperationRequestDTO
     #[Assert\Choice(['aws', 's3', 'ftp', 'local'])]
     public string $adapter;
 
-    #[Assert\Type("string")]
+    #[Assert\Type('string')]
     public string $path;
 
-    #[Assert\Type("string")]
+    #[Assert\Type('string')]
     public ?string $contents = null;
 
     public function __construct(

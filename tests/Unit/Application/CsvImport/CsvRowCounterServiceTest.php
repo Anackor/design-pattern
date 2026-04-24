@@ -12,14 +12,14 @@ class CsvRowCounterServiceTest extends TestCase
     protected function setUp(): void
     {
         $this->filePath = __DIR__ . '/fixtures/test.csv';
-    
+
         if (!file_exists(dirname($this->filePath))) {
-            mkdir(dirname($this->filePath), 0777, true);
+            mkdir(dirname($this->filePath), 0o777, true);
         }
-    
+
         file_put_contents($this->filePath, "name,email\nJohn,john@example.com\nJane,jane@example.com");
     }
-    
+
     public function testCountsCsvRowsCorrectly(): void
     {
         $filePath = __DIR__ . '/fixtures/test.csv';
@@ -32,7 +32,7 @@ class CsvRowCounterServiceTest extends TestCase
 
         unlink($filePath);
     }
-    
+
     protected function tearDown(): void
     {
         if (file_exists($this->filePath)) {

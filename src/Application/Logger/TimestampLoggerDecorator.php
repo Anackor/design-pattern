@@ -4,7 +4,7 @@ namespace App\Application\Logger;
 
 /**
  * TimestampLoggerDecorator adds a timestamp to each log message.
- * 
+ *
  * It extends AbstractLoggerDecorator, allowing you to stack this decorator
  * with others to enrich the log output dynamically.
  */

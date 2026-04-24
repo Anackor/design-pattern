@@ -37,7 +37,7 @@ class CloneProductHandlerTest extends TestCase
         $clonedProduct = new Product('Cloned Product', 12.5, 'Updated description', new Category('New Category'));
         $cloner = $this->createMock(ProductCloner::class);
         $cloner->method('cloneWithOverrides')->willReturn($clonedProduct);
-        
+
         $handler = new CloneProductHandler($productRepository, $categoryRepository, $cloner);
         $cloned = $handler->handle($dto);
 

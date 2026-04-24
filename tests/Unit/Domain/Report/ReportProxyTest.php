@@ -43,7 +43,7 @@ class ReportProxyTest extends TestCase
 
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Access Denied');
-        
+
         $reportProxy->generate();
     }
 }

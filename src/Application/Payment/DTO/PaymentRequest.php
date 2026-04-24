@@ -4,7 +4,7 @@ namespace App\Application\Payment\DTO;
 
 /**
  * Encapsulates input data passed through the chain.
- * Acts as a unified representation of the request context, 
+ * Acts as a unified representation of the request context,
  * allowing each handler to inspect or act upon it.
  */
 class PaymentRequest
@@ -15,9 +15,18 @@ class PaymentRequest
         private readonly array $paymentData, // e.g. ['cardNumber' => '4111...']
     ) {}
 
-    public function getAmount(): float { return $this->amount; }
+    public function getAmount(): float
+    {
+        return $this->amount;
+    }
 
-    public function getPaymentMethod(): string { return $this->paymentMethod; }
+    public function getPaymentMethod(): string
+    {
+        return $this->paymentMethod;
+    }
 
-    public function getPaymentData(): array { return $this->paymentData; }
+    public function getPaymentData(): array
+    {
+        return $this->paymentData;
+    }
 }

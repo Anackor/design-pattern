@@ -12,10 +12,10 @@ class UserExporterIntegrationTest extends TestCase
     {
         $format = new CsvExportFormat();
         $exporter = new UserExporter($format);
-    
+
         $data = [['id' => 1, 'name' => 'Alice']];
         $result = $exporter->export($data);
-    
+
         $expected = "id,name\n1,Alice\n";
         $this->assertEquals($expected, $result);
     }

@@ -21,7 +21,7 @@ use App\Domain\Enum\NotificationChannel;
  * for user registration within the application.
  *
  * The **Facade Pattern** is a structural design pattern that provides a higher-level interface
- * over a set of subsystems, making them easier to use. Instead of exposing the complexities of 
+ * over a set of subsystems, making them easier to use. Instead of exposing the complexities of
  * multiple components to the client, the facade encapsulates and coordinates them internally.
  *
  * ## Purpose of this Facade

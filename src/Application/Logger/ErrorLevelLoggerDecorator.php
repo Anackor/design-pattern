@@ -6,7 +6,7 @@ use App\Domain\Logger\LoggerInterface;
 
 /**
  * ErrorLevelLoggerDecorator adds a severity level to the log message.
- * 
+ *
  * This is useful for distinguishing between INFO, WARNING, ERROR, etc.
  * Can be combined with other decorators for richer output.
  */

@@ -8,23 +8,23 @@ use App\Application\Validator\Constraints\CategoryExists;
 class ProductCloneDTO
 {
     #[Assert\NotNull]
-    #[Assert\Type("integer")]
+    #[Assert\Type('integer')]
     public int $originalId;
 
-    #[Assert\Type("string")]
+    #[Assert\Type('string')]
     #[Assert\Length(max: 255)]
     public ?string $name = null;
 
-    #[Assert\Type("float")]
+    #[Assert\Type('float')]
     #[Assert\GreaterThanOrEqual(0)]
     public ?float $price = null;
 
-    #[Assert\Type("string")]
+    #[Assert\Type('string')]
     public ?string $description = null;
 
     // Validate that the given category ID exists in the database
     // We centralize validation logic inside the DTO to keep controllers and handlers clean and focused on orchestration
-    #[Assert\Type("integer")]
+    #[Assert\Type('integer')]
     #[Assert\Positive]
     #[CategoryExists]
     public ?int $categoryId = null;

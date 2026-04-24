@@ -21,9 +21,9 @@ class EmailTemplateRegistryTest extends TestCase
     public function testGetReturnsCorrectTemplatePath(): void
     {
         $registry = EmailTemplateRegistry::getInstance();
-        
+
         $templatePath = $registry->get('welcome');
-    
+
         $this->assertEquals('emails/welcome.html.twig', $templatePath);
     }
 

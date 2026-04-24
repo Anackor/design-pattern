@@ -42,7 +42,7 @@ class NotificationController
         if (count($errors) > 0) {
             return new JsonResponse([
                 'error' => 'Validation failed',
-                'details' => (string) $errors
+                'details' => (string) $errors,
             ], JsonResponse::HTTP_BAD_REQUEST);
         }
 

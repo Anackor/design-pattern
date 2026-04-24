@@ -15,8 +15,8 @@ class CreateUserProfileHandlerTest extends TestCase
     public function testHandleCreatesUserProfile()
     {
         $userMock = (new User())
-            ->setName("John Smith")
-            ->setEmail("john@example.com")
+            ->setName('John Smith')
+            ->setEmail('john@example.com')
             ->setRole(UserRole::ADMIN);
         $userRepository = $this->createMock(UserRepository::class);
         $userProfileRepository = $this->createMock(UserProfileRepository::class);

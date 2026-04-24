@@ -16,7 +16,7 @@ class CustomerService
     {
         // Logic for data synchronization with external system
         // Example: Make an API call, process the response, handle errors, etc.
-        echo "Customer data synchronized with external system.";
+        echo 'Customer data synchronized with external system.';
     }
 
     /**

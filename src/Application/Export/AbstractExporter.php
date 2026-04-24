@@ -6,11 +6,11 @@ use App\Domain\Export\ExportFormatInterface;
 
 /**
  * This abstract class defines the base exporter logic.
- * It accepts an ExportFormatInterface in the constructor 
+ * It accepts an ExportFormatInterface in the constructor
  * and delegates the export formatting to it.
  *
- * This is the "Abstraction" in the Bridge pattern. It allows 
- * exporters (like ReportExporter, UserExporter...) to work 
+ * This is the "Abstraction" in the Bridge pattern. It allows
+ * exporters (like ReportExporter, UserExporter...) to work
  * independently from the formatting logic.
  */
 abstract class AbstractExporter

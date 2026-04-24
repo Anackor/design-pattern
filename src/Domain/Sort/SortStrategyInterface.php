@@ -7,6 +7,7 @@ namespace App\Domain\Sort;
  * The client can choose the sorting algorithm at runtime, without modifying the class that performs the sorting.
  * This promotes flexibility and scalability, allowing easy extension of new sorting strategies without altering the existing code.
  */
-interface SortStrategyInterface {
+interface SortStrategyInterface
+{
     public function sort(array $items): array;
 }

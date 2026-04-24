@@ -9,7 +9,7 @@ namespace App\Domain\Adapter;
  *
  * By enforcing this interface, we ensure that all storage adapters adhere to the same structure,
  * making them interchangeable and enabling polymorphism. This is key for decoupling the application
- * logic from infrastructure-specific implementations. 
+ * logic from infrastructure-specific implementations.
  */
 interface FileStorageInterface
 {

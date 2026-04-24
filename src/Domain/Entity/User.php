@@ -8,24 +8,24 @@ use App\Domain\Enum\UserRole;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "users")]
+#[ORM\Table(name: 'users')]
 class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
-    #[ORM\Column(type: "string", unique: true)]
+    #[ORM\Column(type: 'string', unique: true)]
     private string $email;
 
-    #[ORM\Column(type: "string", unique: false)]
+    #[ORM\Column(type: 'string', unique: false)]
     private string $country;
 
-    #[ORM\Column(type: "string", unique: false)]
+    #[ORM\Column(type: 'string', unique: false)]
     private string $type;
 
     #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
@@ -52,11 +52,26 @@ class User
         $this->documents = new ArrayCollection();
     }
 
-    public function getId(): int { return $this->id; }
-    public function getName(): string { return $this->name; }
-    public function getEmail(): string { return $this->email; }
-    public function getCountry(): string { return $this->country; }
-    public function getType(): string { return $this->type; }
+    public function getId(): int
+    {
+        return $this->id;
+    }
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
+    public function getType(): string
+    {
+        return $this->type;
+    }
 
     /**
      * Setters with Fluent Interface

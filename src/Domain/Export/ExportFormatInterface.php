@@ -4,7 +4,7 @@ namespace App\Domain\Export;
 
 /**
  * This interface defines the contract for any export format.
- * It allows different implementations (like CSV, JSON, etc.) 
+ * It allows different implementations (like CSV, JSON, etc.)
  * to be used without changing the exporter classes.
  *
  * It plays the role of "Implementor" in the Bridge pattern,

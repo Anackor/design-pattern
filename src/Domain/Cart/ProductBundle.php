@@ -27,7 +27,7 @@ class ProductBundle implements ProductInterface
     {
         return array_reduce(
             $this->items,
-            fn (float $total, ProductInterface $item) => $total + $item->getPrice(),
+            fn(float $total, ProductInterface $item) => $total + $item->getPrice(),
             0.0
         );
     }

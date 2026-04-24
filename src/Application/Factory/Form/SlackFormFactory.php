@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Application\Factory\Form;
 
 use App\Application\Factory\Form\Component\Slack\SlackButton;

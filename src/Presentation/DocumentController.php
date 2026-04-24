@@ -23,14 +23,14 @@ class DocumentController
         CreateDocumentHandler $handler
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
-    
+
         $dto = new CreateDocumentDTO(
             $data['title'],
             $data['content'],
             $data['userID']
         );
-    
-        
+
+
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
             return new JsonResponse(['error' => (string) $errors], 400);

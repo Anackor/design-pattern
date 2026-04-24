@@ -10,7 +10,7 @@ class UserMetricsTracker implements UserActionObserverInterface
 
     public function update(UserAction $action): void
     {
-        $this->actionCounts[$action->userId][$action->actionType] = 
+        $this->actionCounts[$action->userId][$action->actionType] =
             ($this->actionCounts[$action->userId][$action->actionType] ?? 0) + 1;
     }
 

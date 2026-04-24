@@ -72,6 +72,6 @@ class ShoppingCartTest extends TestCase
 
         $cart->applyDiscount($quantityDiscount);
 
-        $this->expectOutputString("");
+        $this->expectOutputString('');
     }
 }

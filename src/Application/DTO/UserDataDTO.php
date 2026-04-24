@@ -6,13 +6,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class UserDataDTO
 {
-    #[Assert\Type("string")]
+    #[Assert\Type('string')]
     private string $name;
 
-    #[Assert\Type("string")]
+    #[Assert\Type('string')]
     private string $email;
 
-    #[Assert\Type("string")]
+    #[Assert\Type('string')]
     public string $password;
 
     public function __construct(string $name, string $email, string $password)
@@ -22,12 +22,12 @@ class UserDataDTO
         $this->password = $password;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getEmail() : string
+    public function getEmail(): string
     {
         return $this->email;
     }

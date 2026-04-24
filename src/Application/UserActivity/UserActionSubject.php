@@ -8,7 +8,7 @@ use SplObjectStorage;
 /**
  * Implements the Subject part of the Observer pattern.
  * This class allows observers to subscribe to user actions and be notified when such actions occur.
- * 
+ *
  * Benefits of using the Observer pattern:
  * - Decouples the subject from its observers.
  * - Promotes extensibility: new observers can be added without modifying the subject.
