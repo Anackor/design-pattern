@@ -2,7 +2,7 @@
 
 ## Problemas detectados
 - La regla de dependencias no se mantiene de forma consistente: el dominio conoce detalles de Application, Infrastructure, Doctrine, AWS y Symfony.
-- Ejemplos especificos: `NotificationFactoryInterface` dependia de `NotificationRequestDTO` (DTO de aplicacion), `ReportProxy` dependia de `AccessChecker` (infraestructura) y `AwsS3ClientInterface` sigue dependiendo de `Aws\Result` (SDK externo).
+- Ejemplos especificos: `NotificationFactoryInterface` dependia de `NotificationRequestDTO` (DTO de aplicacion), `ReportProxy` dependia de `AccessChecker` (infraestructura) y `AwsS3ClientInterface` dependia de `Aws\Result` (SDK externo).
 - La aplicacion instanciaba adaptadores concretos y leia variables de entorno directamente, violando la inversion de dependencias.
 
 ## Mejora propuesta
@@ -20,9 +20,10 @@ Implementar una arquitectura hexagonal estricta enfocada en mostrar patrones de 
 - `ReportProxy` ya no depende de `AccessChecker` de Infrastructure; ahora consume `ReportAccessCheckerInterface`.
 - `NotificationFactoryInterface` y `UserRegistrationFacadeInterface` dejaron de vivir en Domain porque dependian de DTOs de Application.
 - `FileStorageFactory` fue sustituido por `FileStorageResolverInterface` y `FileStorageResolver`.
+- El wrapper de AWS S3 fue reubicado a `Infrastructure\Client\AwsS3ClientInterface`, eliminando `Aws\Result` del dominio.
 - `services.yaml` ya resuelve los adaptadores necesarios por DI.
 - `make deptrac` reporta 0 violaciones con la configuracion actual.
-- Sigue pendiente limpiar dependencias de dominio a SDKs externos como `Aws\Result` y decidir cuanto ORM vive realmente en Domain.
+- Sigue pendiente decidir cuanto ORM vive realmente en Domain.
 
 ## Bundles entregables
 ### Bundle 1: Refactorizacion de puertos de dominio

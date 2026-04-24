@@ -68,7 +68,7 @@ Estado verificado y clasificado:
 ## Fase 2 - Arquitectura y dominio
 
 - [x] Domain deja de depender de DTOs de Application.
-- [ ] Domain deja de depender de SDKs externos (`Aws\Result`, Symfony, Infrastructure).
+- [x] Domain deja de depender de SDKs externos (`Aws\Result`, Symfony, Infrastructure).
 - [x] Handlers de Application dependen de puertos o servicios inyectados, no de factories estaticas de Infrastructure.
 - [x] `NotificationFactory` convierte `string` a `NotificationChannel` o recibe enum tipado.
 - [x] `FileStorageFactory` se elimina o se convierte en resolver inyectado.
@@ -82,6 +82,7 @@ Estado actual de arquitectura:
 - `make deptrac` reporta 0 violaciones con las reglas activas.
 - `ReportProxy` ya depende de un puerto de dominio (`ReportAccessCheckerInterface`).
 - Los handlers de archivos usan `FileStorageResolverInterface` y ya no construyen adaptadores de Infrastructure.
+- El wrapper de AWS S3 vive en `Infrastructure\Client\AwsS3ClientInterface`, asi que Domain ya no conoce `Aws\Result`.
 - Sigue pendiente eliminar acoplamientos de dominio a SDKs/ORM cuando aporten ruido arquitectonico real.
 
 ## Fase 3 - Testing y observabilidad
