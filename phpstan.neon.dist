@@ -1,7 +1,11 @@
 parameters:
-    level: 0
+    level: 4
     paths:
         - src
         - tests
     tmpDir: var/phpstan
     reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        -
+            message: '#Property App\\Domain\\Entity\\[A-Za-z]+::\$id \(int\|null\) is never assigned int so it can be removed from the property type\.#'
+            path: src/Domain/Entity/*

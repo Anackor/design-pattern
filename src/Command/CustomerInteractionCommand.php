@@ -73,7 +73,8 @@ class CustomerInteractionCommand extends Command
         // Handle the user's choice and delegate to the corresponding command
         switch ($selectedOption) {
             case 'Sync customer data':
-                $this->syncExternalCustomerDataCommand->execute($input, $output);
+                $this->syncExternalCustomerDataCommand->execute();
+                $output->writeln('<info>Customer data synchronized successfully.</info>');
                 break;
             case 'Create a new customer':
                 $this->createCustomerCommand->execute($input, $output);

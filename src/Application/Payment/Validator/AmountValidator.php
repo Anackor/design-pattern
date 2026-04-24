@@ -18,6 +18,6 @@ class AmountValidator extends AbstractPaymentHandler
             return PaymentResult::failure('Invalid payment amount.');
         }
 
-        return PaymentResult::success('Payment is valid.');
+        return PaymentResult::success();
     }
 }

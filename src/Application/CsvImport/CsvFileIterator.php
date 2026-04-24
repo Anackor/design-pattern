@@ -35,7 +35,7 @@ class CsvFileIterator implements Iterator
     private $current;
     private int $key = 0;
 
-    public function __construct(private readonly string $filePath)
+    public function __construct(string $filePath)
     {
         $this->file = fopen($filePath, 'r');
         if (!$this->file) {
