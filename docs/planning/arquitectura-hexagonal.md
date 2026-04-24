@@ -21,6 +21,7 @@ Implementar una arquitectura hexagonal estricta enfocada en mostrar patrones de 
 - `NotificationFactoryInterface` y `UserRegistrationFacadeInterface` dejaron de vivir en Domain porque dependian de DTOs de Application.
 - `FileStorageFactory` fue sustituido por `FileStorageResolverInterface` y `FileStorageResolver`.
 - El wrapper de AWS S3 fue reubicado a `Infrastructure\Client\AwsS3ClientInterface`, eliminando `Aws\Result` del dominio.
+- `Document::getLastVersion()` ahora falla de forma explicita cuando no hay versiones y `DocumentVersion` ya no expone setters mutables.
 - `services.yaml` ya resuelve los adaptadores necesarios por DI.
 - `make deptrac` reporta 0 violaciones con la configuracion actual.
 - Sigue pendiente decidir cuanto ORM vive realmente en Domain.

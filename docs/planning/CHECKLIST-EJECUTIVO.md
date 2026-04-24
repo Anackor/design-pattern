@@ -73,8 +73,8 @@ Estado verificado y clasificado:
 - [x] `NotificationFactory` convierte `string` a `NotificationChannel` o recibe enum tipado.
 - [x] `FileStorageFactory` se elimina o se convierte en resolver inyectado.
 - [ ] Entidades criticas validan invariantes en constructor/named constructors.
-- [ ] `Document::getLastVersion()` maneja ausencia de versiones.
-- [ ] `DocumentVersion` es realmente inmutable o deja de presentarse como tal.
+- [x] `Document::getLastVersion()` maneja ausencia de versiones.
+- [x] `DocumentVersion` es realmente inmutable o deja de presentarse como tal.
 - [ ] Value objects usados donde aportan invariantes, no como decoracion.
 
 Estado actual de arquitectura:
@@ -83,6 +83,7 @@ Estado actual de arquitectura:
 - `ReportProxy` ya depende de un puerto de dominio (`ReportAccessCheckerInterface`).
 - Los handlers de archivos usan `FileStorageResolverInterface` y ya no construyen adaptadores de Infrastructure.
 - El wrapper de AWS S3 vive en `Infrastructure\Client\AwsS3ClientInterface`, asi que Domain ya no conoce `Aws\Result`.
+- `Document` ya falla de forma explicita si no tiene versiones y `DocumentVersion` deja de exponer mutadores.
 - Sigue pendiente eliminar acoplamientos de dominio a SDKs/ORM cuando aporten ruido arquitectonico real.
 
 ## Fase 3 - Testing y observabilidad
