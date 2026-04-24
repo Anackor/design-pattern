@@ -3,8 +3,8 @@
 namespace App\Tests\Application\Handler;
 
 use App\Application\DTO\NotificationRequestDTO;
+use App\Application\Factory\NotificationFactoryInterface;
 use App\Application\Notification\SendNotificationHandler;
-use App\Domain\Factory\NotificationFactoryInterface;
 use App\Domain\Notification\NotificationInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -12,7 +12,7 @@ class SendNotificationHandlerTest extends TestCase
 {
     public function testSendNotificationCallsCorrectInstance()
     {
-        $dto = new NotificationRequestDTO('email', 'Hello', 'World', 'mail@test.com');
+        $dto = new NotificationRequestDTO('Title', 'Hello', 'mail@test.com', 'email');
         $notificationMock = $this->createMock(NotificationInterface::class);
         $notificationMock->expects($this->once())->method('send');
 

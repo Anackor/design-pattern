@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Registration;
+namespace App\Application\Registration;
 
 use App\Application\DTO\UserDataDTO;
 use App\Domain\Entity\User;

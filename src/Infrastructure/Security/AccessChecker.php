@@ -2,9 +2,10 @@
 
 namespace App\Infrastructure\Security;
 
+use App\Domain\Report\ReportAccessCheckerInterface;
 use App\Shared\Security\UserContext;
 
-class AccessChecker
+class AccessChecker implements ReportAccessCheckerInterface
 {
     private UserContext $userContext;
 

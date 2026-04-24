@@ -2,10 +2,9 @@
 
 namespace App\Tests\Domain\Report\Proxy;
 
+use App\Domain\Report\ReportAccessCheckerInterface;
 use App\Domain\Report\Proxy\ReportProxy;
 use App\Domain\Report\Proxy\LazyReportProxy;
-use App\Infrastructure\Security\AccessChecker;
-use App\Shared\Security\UserContext;
 use PHPUnit\Framework\TestCase;
 
 class ReportProxyTest extends TestCase
@@ -16,11 +15,8 @@ class ReportProxyTest extends TestCase
         $lazyProxyMock->method('generate')
             ->willReturn('Generated Report');
 
-        $userContextMock = $this->createMock(UserContext::class);
-        $userContextMock->method('getRoles')
-            ->willReturn(['ROLE_USER']);
-
-        $accessChecker = new AccessChecker($userContextMock);
+        $accessChecker = $this->createMock(ReportAccessCheckerInterface::class);
+        $accessChecker->method('canViewFinancialReports')->willReturn(true);
 
         $reportProxy = new ReportProxy($lazyProxyMock, $accessChecker);
 
@@ -32,12 +28,8 @@ class ReportProxyTest extends TestCase
     public function testGenerateReportWithoutAccess(): void
     {
         $lazyProxyMock = $this->createMock(LazyReportProxy::class);
-
-        $userContextMock = $this->createMock(UserContext::class);
-        $userContextMock->method('getRoles')
-            ->willReturn([]);
-
-        $accessChecker = new AccessChecker($userContextMock);
+        $accessChecker = $this->createMock(ReportAccessCheckerInterface::class);
+        $accessChecker->method('canViewFinancialReports')->willReturn(false);
 
         $reportProxy = new ReportProxy($lazyProxyMock, $accessChecker);
 

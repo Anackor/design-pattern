@@ -2,12 +2,10 @@
 
 namespace App\Application\Report;
 
-use App\Domain\Report\FinancialReport;
 use App\Domain\Report\Proxy\LazyReportProxy;
 use App\Domain\Report\Proxy\ReportProxy;
+use App\Domain\Report\ReportAccessCheckerInterface;
 use App\Domain\Report\ReportInterface;
-use App\Infrastructure\Security\AccessChecker;
-use App\Shared\Security\UserContext;
 
 /**
  * ReportServiceFactory - Factory to create the appropriate proxy for report generation.
@@ -18,12 +16,7 @@ use App\Shared\Security\UserContext;
  */
 class ReportServiceFactory
 {
-    private UserContext $userContext;
-
-    public function __construct(UserContext $userContext)
-    {
-        $this->userContext = $userContext;
-    }
+    public function __construct(private ReportAccessCheckerInterface $accessChecker) {}
 
     /**
      * Creates and returns a composed report service with proxies.
@@ -32,10 +25,6 @@ class ReportServiceFactory
      */
     public function create(): ReportInterface
     {
-        $virtualProxy = new LazyReportProxy();
-
-        $accessChecker = new AccessChecker($this->userContext);
-
-        return new ReportProxy($virtualProxy, $accessChecker);
+        return new ReportProxy(new LazyReportProxy(), $this->accessChecker);
     }
 }

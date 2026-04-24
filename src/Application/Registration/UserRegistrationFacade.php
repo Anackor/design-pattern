@@ -5,7 +5,6 @@ namespace App\Application\Registration;
 use App\Application\DTO\NotificationRequestDTO;
 use App\Application\DTO\UserDataDTO;
 use App\Application\Notification\SendNotificationHandler;
-use App\Domain\Registration\UserRegistrationFacadeInterface;
 use App\Application\Registration\Service\UserCreator;
 use App\Application\Registration\Service\PasswordEncryptor;
 use App\Application\Registration\Service\WelcomeEmailSender;
@@ -49,7 +48,7 @@ use App\Domain\Enum\NotificationChannel;
  * ]);
  * ```
  *
- * @see \App\Domain\Registration\UserRegistrationFacadeInterface
+ * @see \App\Application\Registration\UserRegistrationFacadeInterface
  */
 class UserRegistrationFacade implements UserRegistrationFacadeInterface
 {

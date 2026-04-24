@@ -58,8 +58,14 @@ services:
     App\Domain\Repository\DocumentRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineDocumentRepository
 
-    App\Domain\Factory\NotificationFactoryInterface:
+    App\Application\Factory\NotificationFactoryInterface:
         alias: App\Application\Factory\NotificationFactory
+
+    App\Application\File\FileStorageResolverInterface:
+        alias: App\Infrastructure\FileStorage\FileStorageResolver
+
+    App\Domain\Report\ReportAccessCheckerInterface:
+        alias: App\Infrastructure\Security\AccessChecker
 
     App\Presentation\:
         resource: '../src/Presentation/'
@@ -102,14 +108,32 @@ services:
             $user: '%env(FTP_USER)%'
             $password: '%env(FTP_PASSWORD)%'
 
+    App\Infrastructure\Client\AwsS3Client:
+        arguments:
+            $key: '%env(AWS_ACCESS_KEY_ID)%'
+            $secret: '%env(AWS_SECRET_ACCESS_KEY)%'
+            $region: '%env(AWS_REGION)%'
+
+    App\Infrastructure\FileStorage\LocalFileStorageAdapter:
+        arguments:
+            $basePath: '%env(LOCAL_STORAGE_PATH)%'
+
+    App\Infrastructure\FileStorage\AwsS3StorageAdapter:
+        arguments:
+            $client: '@App\Domain\Client\AwsS3ClientInterface'
+            $bucket: '%env(AWS_BUCKET)%'
+
     App\Infrastructure\FileStorage\FtpStorageAdapter:
         arguments:
             $client: '@App\Infrastructure\Client\FtpClient'
 
+    App\Domain\Client\AwsS3ClientInterface:
+        alias: App\Infrastructure\Client\AwsS3Client
+
     # ReportServiceFactory
     App\Application\Report\ReportServiceFactory:
         arguments:
-            $userContext: '@App\Shared\Security\UserContext'
+            $accessChecker: '@App\Domain\Report\ReportAccessCheckerInterface'
 
     # Configure the ReportInterface to be resolved using the factory
     App\Domain\Report\ReportInterface:
