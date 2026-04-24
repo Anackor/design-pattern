@@ -2,6 +2,7 @@
 
 namespace App\Application\Report;
 
+use App\Application\DTO\GenerateReportDTO;
 use App\Domain\Report\ReportInterface;
 
 /**

@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Factory;
 
 use App\Domain\Adapter\FileStorageInterface;
+use App\Infrastructure\Client\AwsS3Client;
 use App\Infrastructure\FileStorage\FtpStorageAdapter;
 use App\Infrastructure\FileStorage\AwsS3StorageAdapter;
 use App\Infrastructure\Client\FtpClient;
@@ -23,15 +24,17 @@ use App\Infrastructure\FileStorage\LocalFileStorageAdapter;
  */
 class FileStorageFactory
 {
-    public static function create(string $type): FileStorageInterface
+    public function create(string $type): FileStorageInterface
     {
         return match ($type) {
             'local' => new LocalFileStorageAdapter($_ENV['LOCAL_STORAGE_PATH']),
-            's3'    => new AwsS3StorageAdapter(
-                $_ENV['S3_BUCKET'],
-                $_ENV['S3_KEY'],
-                $_ENV['S3_SECRET'],
-                $_ENV['S3_REGION']
+            'aws', 's3' => new AwsS3StorageAdapter(
+                new AwsS3Client(
+                    $_ENV['AWS_ACCESS_KEY_ID'],
+                    $_ENV['AWS_SECRET_ACCESS_KEY'],
+                    $_ENV['AWS_REGION']
+                ),
+                $_ENV['AWS_BUCKET']
             ),
             'ftp'   => new FtpStorageAdapter(
                 new FtpClient(

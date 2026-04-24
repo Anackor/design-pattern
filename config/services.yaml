@@ -77,7 +77,7 @@ services:
             $consoleFactory: '@App\Application\Factory\Form\ConsoleFormFactory'
     # /ABSTRACT FACTORY
 
-    App\Application\BuilderUserProfile\BuildFormHandler:
+    App\Application\BuildForm\BuildFormHandler:
         arguments:
             - '@App\Application\Factory\Form\FormFactoryResolver'
 

@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class FileOperationRequestDTO
 {
-    #[Assert\Choice(['aws', 'ftp', 'local'])]
+    #[Assert\Choice(['aws', 's3', 'ftp', 'local'])]
     public string $adapter;
 
     #[Assert\Type("string")]
