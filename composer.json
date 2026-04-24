@@ -1,4 +1,6 @@
 {
+    "name": "app/design-pattern-api",
+    "description": "Symfony API that showcases design patterns with a Docker-first development workflow.",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",

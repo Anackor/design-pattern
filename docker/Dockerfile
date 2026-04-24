@@ -1,23 +1,23 @@
-# Usamos PHP 8.3 con Apache
+# PHP 8.3 with Apache.
 FROM php:8.3-apache
 
-# Instalamos dependencias del sistema
+# Install required system packages and PHP extensions.
 RUN apt-get update && apt-get install -y \
-    git unzip libpq-dev libzip-dev zip libpng-dev \
+    curl git unzip libpq-dev libzip-dev zip libpng-dev \
     && docker-php-ext-install pdo pdo_mysql zip gd
 
-# Instalamos Composer
+# Install Composer.
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Habilitamos módulos de Apache
+# Enable Apache modules required by Symfony.
 RUN a2enmod rewrite
 
-# Instalar Symfony CLI
+# Install Symfony CLI in the container for troubleshooting.
 RUN curl -sS https://get.symfony.com/cli/installer | bash \
     && mv /root/.symfony*/bin/symfony /usr/local/bin/symfony
 
-# Configuración de Symfony: creamos un directorio de trabajo
+# Symfony working directory.
 WORKDIR /var/www/symfony
 
-# Exponer el puerto 8000
-EXPOSE 8000
+# Apache listens on port 80 inside the container.
+EXPOSE 80
