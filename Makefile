@@ -3,11 +3,12 @@ COMPOSE := docker compose -f $(COMPOSE_FILE)
 APP_SERVICE := app
 DB_SERVICE := mysql
 APP_WORKDIR := /var/www/symfony
+COVERAGE_DIR := var/coverage
 CONSOLE_ARGS ?=
 COMPOSER_ARGS ?=
 PHPUNIT_ARGS ?=
 
-.PHONY: build start stop logs ps shell console composer install test db migrate
+.PHONY: build start stop logs ps shell console composer install test phpstan cs cs-fix deptrac coverage quality db migrate
 
 build:
 	$(COMPOSE) build
@@ -38,6 +39,23 @@ install:
 
 test:
 	$(COMPOSE) run --rm $(APP_SERVICE) php vendor/bin/phpunit $(PHPUNIT_ARGS)
+
+phpstan:
+	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer qa:phpstan"
+
+cs:
+	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer qa:cs"
+
+cs-fix:
+	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer qa:cs-fix"
+
+deptrac:
+	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer qa:deptrac || true"
+
+coverage:
+	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; mkdir -p $(COVERAGE_DIR) && composer qa:coverage"
+
+quality: phpstan cs test
 
 db:
 	$(COMPOSE) exec $(DB_SERVICE) mysql -u api_user -papi_pass api_db

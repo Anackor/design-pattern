@@ -61,6 +61,12 @@ Application endpoints are exposed at:
 - `make shell`: open a shell in the PHP container
 - `make console CONSOLE_ARGS="lint:container"`: run Symfony console commands
 - `make composer COMPOSER_ARGS="validate"`: run Composer commands inside Docker
+- `make phpstan`: run the base static analysis profile
+- `make cs`: run the formatter in dry-run mode
+- `make cs-fix`: apply formatting fixes
+- `make deptrac`: run architectural diagnostics
+- `make coverage`: generate coverage output in `var/coverage`
+- `make quality`: run the base quality gate bundle
 - `make stop`: stop and remove the stack
 
 If you do not use `make`, the equivalent Docker command shape is:
@@ -79,6 +85,15 @@ Environment variable names are aligned around:
 
 - `FTP_HOST`, `FTP_USER`, `FTP_PASSWORD`
 - `AWS_REGION`, `AWS_BUCKET`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+
+## Quality gates
+
+The initial quality tooling is intentionally pragmatic:
+
+- PHPStan runs at an achievable starting level
+- PHP CS Fixer is available as a formatter gate and fixer
+- Deptrac is configured as an architectural diagnostic, not as a required bundle gate yet
+- Coverage is generated under `var/coverage`
 
 ## Repository structure
 

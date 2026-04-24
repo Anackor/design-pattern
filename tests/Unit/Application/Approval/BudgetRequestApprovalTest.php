@@ -9,10 +9,10 @@ class BudgetRequestApprovalTest extends TestCase
 {
     public function testBudgetRequestApproval()
     {
-        $budgetApproval = new BudgetRequestApproval('budget123');
-        
+        $budgetApproval = new BudgetRequestApproval();
+
         $result = $budgetApproval->processRequest();
-        
+
         $this->assertEquals("Budget request rejected.\n", $result);
     }
 }

@@ -2,11 +2,10 @@
 
 namespace App\Domain\Entity;
 
-use App\Domain\Repository\UserProfileRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UserProfileRepository::class)]
+#[ORM\Entity]
 class UserProfile
 {
     #[ORM\Id]
