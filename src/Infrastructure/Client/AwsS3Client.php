@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Client;
 
-use App\Domain\Client\AwsS3ClientInterface;
 use Aws\S3\S3Client;
 use Aws\Result;
 

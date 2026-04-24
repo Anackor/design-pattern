@@ -120,14 +120,14 @@ services:
 
     App\Infrastructure\FileStorage\AwsS3StorageAdapter:
         arguments:
-            $client: '@App\Domain\Client\AwsS3ClientInterface'
+            $client: '@App\Infrastructure\Client\AwsS3ClientInterface'
             $bucket: '%env(AWS_BUCKET)%'
 
     App\Infrastructure\FileStorage\FtpStorageAdapter:
         arguments:
             $client: '@App\Infrastructure\Client\FtpClient'
 
-    App\Domain\Client\AwsS3ClientInterface:
+    App\Infrastructure\Client\AwsS3ClientInterface:
         alias: App\Infrastructure\Client\AwsS3Client
 
     # ReportServiceFactory
