@@ -2,7 +2,6 @@
 
 namespace App\Domain\Entity;
 
-use App\Domain\Repository\DocumentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -33,6 +32,8 @@ class Document
 
     public function __construct(string $title, User $user)
     {
+        $this->assertValidTitle($title);
+
         $this->title = $title;
         $this->user = $user;
         $this->versions = new ArrayCollection();
@@ -50,6 +51,7 @@ class Document
 
     public function setTitle(string $title): static
     {
+        $this->assertValidTitle($title);
         $this->title = $title;
 
         return $this;
@@ -75,21 +77,40 @@ class Document
         return $this->versions;
     }
 
-    /**
-     * @return DocumentVersion
-     */
     public function getLastVersion(): DocumentVersion
     {
-        return $this->versions->first();
+        $lastVersion = null;
+
+        foreach ($this->versions as $version) {
+            if ($lastVersion === null || $version->getCreatedAt() >= $lastVersion->getCreatedAt()) {
+                $lastVersion = $version;
+            }
+        }
+
+        if (!$lastVersion instanceof DocumentVersion) {
+            throw new \LogicException('Document has no versions yet.');
+        }
+
+        return $lastVersion;
     }
 
     public function addVersion(DocumentVersion $version): static
     {
         if (!$this->versions->contains($version)) {
+            if ($version->getDocument() !== $this) {
+                throw new \LogicException('Document version belongs to a different document.');
+            }
+
             $this->versions->add($version);
-            $version->setDocument($this);
         }
 
         return $this;
+    }
+
+    private function assertValidTitle(string $title): void
+    {
+        if ('' === trim($title)) {
+            throw new \InvalidArgumentException('Document title cannot be empty.');
+        }
     }
 }
