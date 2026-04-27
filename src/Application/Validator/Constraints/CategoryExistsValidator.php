@@ -21,7 +21,7 @@ class CategoryExistsValidator extends ConstraintValidator
             return; // categoryId is nullable
         }
 
-        if (!$this->categoryRepository->findById($value)) {
+        if (!$this->categoryRepository->catalogCategoryOfId($value)) {
             $this->context->buildViolation($constraint->message)
                 ->setParameter('{{ id }}', $value)
                 ->addViolation();

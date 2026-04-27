@@ -6,7 +6,9 @@ use App\Domain\Entity\Document;
 
 interface DocumentRepositoryInterface
 {
-    public function findById(int $id): ?Document;
-    public function findAll(): array;
-    public function save(Document $user): void;
+    public function documentOfId(int $documentId): ?Document;
+
+    public function allDocuments(): array;
+
+    public function store(Document $document): void;
 }

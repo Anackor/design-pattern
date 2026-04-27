@@ -15,19 +15,19 @@ class DoctrineProductRepository implements ProductRepositoryInterface
         $this->entityManager = $entityManager;
     }
 
-    public function findById(int $id): ?Product
+    public function catalogProductOfId(int $productId): ?Product
     {
-        return $this->entityManager->find(Product::class, $id);
+        return $this->entityManager->find(Product::class, $productId);
     }
 
-    public function findAll(): array
+    public function allCatalogProducts(): array
     {
         return $this->entityManager->getRepository(Product::class)->findAll();
     }
 
-    public function save(Product $user): void
+    public function addToCatalog(Product $product): void
     {
-        $this->entityManager->persist($user);
+        $this->entityManager->persist($product);
         $this->entityManager->flush();
     }
 }

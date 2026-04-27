@@ -28,7 +28,7 @@ class CreateDocumentHandlerTest extends TestCase
 
         $repository = $this->createMock(DocumentRepository::class);
         $repository->expects($this->once())
-            ->method('save')
+            ->method('store')
             ->with($this->callback(function ($document) use ($expectedTitle, $expectedContent, $user) {
                 return $document instanceof Document
                     && $document->getTitle() === $expectedTitle

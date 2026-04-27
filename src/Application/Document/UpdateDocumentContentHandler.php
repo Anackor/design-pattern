@@ -31,7 +31,7 @@ class UpdateDocumentContentHandler
         [$document, $newContent] = $this->mapper->fromUpdateDTO($dto);
 
         $version = new DocumentVersion($document, $newContent);
-        $this->documentRepository->save($document);
+        $this->documentRepository->store($document);
 
         return $version;
     }

@@ -16,9 +16,13 @@ class CreateUserProfileHandler
 
     public function handle(UserProfileDTO $dto)
     {
-        $user = $this->userRepository->findById($dto->userId);
+        $user = $this->userRepository->registeredUserOfId($dto->userId);
         if (!$user) {
             return null;
+        }
+
+        if (null === $dto->phone || null === $dto->address || null === $dto->birthdate) {
+            throw new \InvalidArgumentException('User profile data is incomplete.');
         }
 
         $profile = (new UserProfileBuilder())
@@ -28,7 +32,7 @@ class CreateUserProfileHandler
             ->setBirthdate($dto->birthdate)
             ->build();
 
-        $this->userProfileRepository->save($profile);
+        $this->userProfileRepository->addProfile($profile);
         return $profile;
     }
 }

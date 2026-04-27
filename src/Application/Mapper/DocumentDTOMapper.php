@@ -26,7 +26,7 @@ class DocumentDTOMapper
 
     public function fromCreateDTO(CreateDocumentDTO $dto): array
     {
-        $user = $this->userRepository->findById($dto->userId);
+        $user = $this->userRepository->registeredUserOfId($dto->userId);
         if (!$user) {
             throw new \InvalidArgumentException('User not found.');
         }
@@ -36,7 +36,7 @@ class DocumentDTOMapper
 
     public function fromUpdateDTO(UpdateDocumentDTO $dto): array
     {
-        $document = $this->documentRepository->findById($dto->documentID);
+        $document = $this->documentRepository->documentOfId($dto->documentID);
         if (!$document) {
             throw new \InvalidArgumentException('Document not found.');
         }

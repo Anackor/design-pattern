@@ -15,19 +15,19 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
         $this->entityManager = $entityManager;
     }
 
-    public function findById(int $id): ?Category
+    public function catalogCategoryOfId(int $categoryId): ?Category
     {
-        return $this->entityManager->find(Category::class, $id);
+        return $this->entityManager->find(Category::class, $categoryId);
     }
 
-    public function findAll(): array
+    public function allCatalogCategories(): array
     {
         return $this->entityManager->getRepository(Category::class)->findAll();
     }
 
-    public function save(Category $user): void
+    public function addToCatalog(Category $category): void
     {
-        $this->entityManager->persist($user);
+        $this->entityManager->persist($category);
         $this->entityManager->flush();
     }
 }

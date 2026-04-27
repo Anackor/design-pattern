@@ -6,6 +6,7 @@ use App\Domain\Entity\UserProfile;
 
 interface UserProfileRepositoryInterface
 {
-    public function findById(int $id): ?UserProfile;
-    public function save(UserProfile $user): void;
+    public function profileOfId(int $profileId): ?UserProfile;
+
+    public function addProfile(UserProfile $profile): void;
 }

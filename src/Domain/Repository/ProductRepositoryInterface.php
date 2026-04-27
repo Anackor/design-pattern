@@ -6,6 +6,7 @@ use App\Domain\Entity\Product;
 
 interface ProductRepositoryInterface
 {
-    public function findById(int $id): ?Product;
-    public function save(Product $user): void;
+    public function catalogProductOfId(int $productId): ?Product;
+
+    public function addToCatalog(Product $product): void;
 }

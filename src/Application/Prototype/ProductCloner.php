@@ -18,24 +18,24 @@ use App\Domain\Entity\Product;
  */
 class ProductCloner
 {
-    public function cloneWithOverrides(Product $original, array $overrides): Product
+    public function cloneWithOverrides(Product $original, ProductCloneOverrides $overrides): Product
     {
         $clone = $original->clone();
 
-        if (isset($overrides['name'])) {
-            $clone->setName($overrides['name']);
+        if ($overrides->hasName()) {
+            $clone->setName($overrides->name());
         }
 
-        if (isset($overrides['price'])) {
-            $clone->setPrice($overrides['price']);
+        if ($overrides->hasPrice()) {
+            $clone->updatePrice($overrides->price());
         }
 
-        if (isset($overrides['description'])) {
-            $clone->setDescription($overrides['description']);
+        if ($overrides->hasDescription()) {
+            $clone->setDescription($overrides->description());
         }
 
-        if (isset($overrides['category'])) {
-            $clone->setCategory($overrides['category']);
+        if ($overrides->categoryWasProvided()) {
+            $clone->setCategory($overrides->category());
         }
 
         return $clone;

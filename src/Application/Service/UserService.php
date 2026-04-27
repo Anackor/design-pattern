@@ -11,11 +11,9 @@ class UserService
 
     public function createUser(string $name, string $email): User
     {
-        $user = (new User())
-            ->setName($name)
-            ->setEmail($email);
+        $user = User::register($name, $email);
 
-        $this->userRepository->save($user);
+        $this->userRepository->addRegisteredUser($user);
 
         return $user;
     }

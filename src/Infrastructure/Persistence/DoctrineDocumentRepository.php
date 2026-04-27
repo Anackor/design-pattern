@@ -15,19 +15,19 @@ class DoctrineDocumentRepository implements DocumentRepositoryInterface
         $this->entityManager = $entityManager;
     }
 
-    public function findById(int $id): ?Document
+    public function documentOfId(int $documentId): ?Document
     {
-        return $this->entityManager->find(Document::class, $id);
+        return $this->entityManager->find(Document::class, $documentId);
     }
 
-    public function findAll(): array
+    public function allDocuments(): array
     {
         return $this->entityManager->getRepository(Document::class)->findAll();
     }
 
-    public function save(Document $user): void
+    public function store(Document $document): void
     {
-        $this->entityManager->persist($user);
+        $this->entityManager->persist($document);
         $this->entityManager->flush();
     }
 }
