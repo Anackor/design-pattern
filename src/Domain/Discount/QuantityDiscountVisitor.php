@@ -2,7 +2,8 @@
 
 namespace App\Domain\Discount;
 
-use App\Domain\Product\Product;
+use App\Domain\Cart\ProductInterface;
+use App\Shared\ValueObject\Money;
 
 class QuantityDiscountVisitor implements DiscountVisitorInterface
 {
@@ -13,12 +14,10 @@ class QuantityDiscountVisitor implements DiscountVisitorInterface
         $this->quantity = $quantity;
     }
 
-    public function visit(Product $product): float
+    public function visit(ProductInterface $product): Money
     {
         $price = $product->getPrice();
 
-        $price *= (1 - $this->quantity / 100);
-
-        return $price;
+        return $price->multiply(1 - $this->quantity / 100);
     }
 }

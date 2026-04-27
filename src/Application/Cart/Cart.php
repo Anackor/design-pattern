@@ -3,6 +3,7 @@
 namespace App\Application\Cart;
 
 use App\Domain\Cart\ProductInterface;
+use App\Shared\ValueObject\Money;
 
 /**
  * Class Cart
@@ -48,9 +49,9 @@ class Cart
     {
         return array_reduce(
             $this->items,
-            fn(float $total, ProductInterface $item) => $total + $item->getPrice(),
-            0.0
-        );
+            fn(Money $total, ProductInterface $item) => $total->add($item->getPrice()),
+            Money::zero()
+        )->toFloat();
     }
 
     /**

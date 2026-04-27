@@ -2,6 +2,8 @@
 
 namespace App\Domain\Cart;
 
+use App\Shared\ValueObject\Money;
+
 /**
  * ProductInterface represents the common contract in the Composite pattern.
  * Both single products and bundles implement this interface so that they can be treated uniformly.
@@ -9,5 +11,5 @@ namespace App\Domain\Cart;
 interface ProductInterface
 {
     public function getName(): string;
-    public function getPrice(): float;
+    public function getPrice(): Money;
 }
