@@ -2,9 +2,12 @@
 
 namespace App\Domain\Entity;
 
+use App\Domain\Enum\UserRole;
+use App\Domain\Flyweight\Country;
+use App\Domain\Flyweight\UserType;
+use App\Shared\ValueObject\Email;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use App\Domain\Enum\UserRole;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -50,6 +53,26 @@ class User
     {
         $this->userOrders = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->country = 'unknown';
+        $this->type = 'standard';
+        $this->role = UserRole::USER;
+    }
+
+    public static function register(
+        string $name,
+        string $email,
+        UserRole $role = UserRole::USER,
+        string $country = 'unknown',
+        string $type = 'standard'
+    ): self {
+        $user = new self();
+        $user->setName($name);
+        $user->setEmail($email);
+        $user->setRole($role);
+        $user->setCountry($country);
+        $user->setType($type);
+
+        return $user;
     }
 
     public function getId(): ?int
@@ -75,10 +98,10 @@ class User
 
     /**
      * Setters with Fluent Interface
-    */
+     */
     public function setName(string $name): self
     {
-        $this->name = $name;
+        $this->name = $this->normalizeName($name);
 
         // Using Fluent Interface enables chaining multiple setter calls in a single statement.
         // Follow the usage example on src/DataFixtures/UserFixtures::load()
@@ -87,19 +110,22 @@ class User
 
     public function setEmail(string $email): self
     {
-        $this->email = $email;
+        $this->email = Email::fromString($email)->value();
+
         return $this;
     }
 
     public function setCountry(string $country): self
     {
-        $this->country = $country;
+        $this->country = $this->normalizeCountry($country);
+
         return $this;
     }
 
     public function setType(string $type): self
     {
-        $this->type = $type;
+        $this->type = $this->normalizeType($type);
+
         return $this;
     }
 
@@ -158,6 +184,7 @@ class User
     public function setRole(UserRole $role): self
     {
         $this->role = $role;
+
         return $this;
     }
 
@@ -189,5 +216,26 @@ class User
         }
 
         return $this;
+    }
+
+    private function normalizeName(string $name): string
+    {
+        $normalized = trim($name);
+
+        if ('' === $normalized) {
+            throw new \InvalidArgumentException('User name cannot be empty.');
+        }
+
+        return $normalized;
+    }
+
+    private function normalizeCountry(string $country): string
+    {
+        return Country::fromName($country)->getName();
+    }
+
+    private function normalizeType(string $type): string
+    {
+        return UserType::fromString($type)->getType();
     }
 }

@@ -28,10 +28,10 @@ class UserProfile
 
     public function __construct(User $user, string $phoneNumber, string $address, \DateTimeInterface $birthDate)
     {
-        $this->user = $user;
-        $this->phone = $phoneNumber;
-        $this->address = $address;
-        $this->date_of_birth = $birthDate;
+        $this->setUser($user);
+        $this->setPhone($phoneNumber);
+        $this->setAddress($address);
+        $this->setDateOfBirth($birthDate);
     }
 
     public function getId(): ?int
@@ -56,9 +56,15 @@ class UserProfile
         return $this->address;
     }
 
-    public function setAddress(?string $address): static
+    public function setAddress(string $address): static
     {
-        $this->address = $address;
+        $normalized = trim($address);
+
+        if ('' === $normalized) {
+            throw new \InvalidArgumentException('User profile address cannot be empty.');
+        }
+
+        $this->address = $normalized;
 
         return $this;
     }
@@ -68,9 +74,15 @@ class UserProfile
         return $this->phone;
     }
 
-    public function setPhone(?string $phone): static
+    public function setPhone(string $phone): static
     {
-        $this->phone = $phone;
+        $normalized = preg_replace('/\s+/', '', trim($phone));
+
+        if (!is_string($normalized) || !preg_match('/^\+?[0-9]{9,15}$/', $normalized)) {
+            throw new \InvalidArgumentException('User profile phone must contain 9 to 15 digits.');
+        }
+
+        $this->phone = $normalized;
 
         return $this;
     }
@@ -80,8 +92,12 @@ class UserProfile
         return $this->date_of_birth;
     }
 
-    public function setDateOfBirth(?\DateTimeInterface $date_of_birth): static
+    public function setDateOfBirth(\DateTimeInterface $date_of_birth): static
     {
+        if ($date_of_birth > new \DateTimeImmutable()) {
+            throw new \InvalidArgumentException('User profile birth date cannot be in the future.');
+        }
+
         $this->date_of_birth = $date_of_birth;
 
         return $this;

@@ -11,10 +11,13 @@ class CountryFlyweightFactory
 
     public function getCountry(string $name): Country
     {
-        if (!isset($this->countries[$name])) {
-            $this->countries[$name] = new Country($name);
+        $country = Country::fromName($name);
+        $key = $country->getName();
+
+        if (!isset($this->countries[$key])) {
+            $this->countries[$key] = $country;
         }
 
-        return $this->countries[$name];
+        return $this->countries[$key];
     }
 }

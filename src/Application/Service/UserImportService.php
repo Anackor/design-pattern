@@ -2,9 +2,10 @@
 
 namespace App\Application\Service;
 
+use App\Domain\Entity\User;
+use App\Domain\Enum\UserRole;
 use App\Domain\Flyweight\CountryFlyweightFactory;
 use App\Domain\Flyweight\UserTypeFlyweightFactory;
-use App\Domain\Entity\User;
 
 /**
  * This service demonstrates the use of the Flyweight Pattern to efficiently import a large volume of users.
@@ -35,11 +36,13 @@ class UserImportService
             $country = $this->countryFactory->getCountry($data['country']);
             $userType = $this->userTypeFactory->getUserType($data['type']);
 
-            $user = (new User())
-                ->setName($data['name'])
-                ->setEmail($data['email'])
-                ->setCountry($country->getName())
-                ->setType($userType->getType());
+            $user = User::register(
+                $data['name'],
+                $data['email'],
+                UserRole::USER,
+                $country->getName(),
+                $userType->getType()
+            );
 
             $users[] = $user;
         }

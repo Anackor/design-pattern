@@ -14,12 +14,12 @@ class DocumentTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Document title cannot be empty.');
 
-        new Document('   ', new User());
+        new Document('   ', User::register('Doc Owner', 'doc-owner@example.com'));
     }
 
     public function testGetLastVersionThrowsWhenDocumentHasNoVersions(): void
     {
-        $document = new Document('Contract', new User());
+        $document = new Document('Contract', User::register('Doc Owner', 'doc-owner@example.com'));
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Document has no versions yet.');
@@ -29,7 +29,7 @@ class DocumentTest extends TestCase
 
     public function testWithNewContentCreatesANewImmutableVersion(): void
     {
-        $document = new Document('Contract', new User());
+        $document = new Document('Contract', User::register('Doc Owner', 'doc-owner@example.com'));
         $initialVersion = new DocumentVersion($document, 'Initial content');
 
         $updatedVersion = $initialVersion->withNewContent('Updated content');
