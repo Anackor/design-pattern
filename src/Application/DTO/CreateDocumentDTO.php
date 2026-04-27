@@ -10,7 +10,5 @@ class CreateDocumentDTO
         public readonly string $title,
         public readonly string $initialContent,
         public readonly int $userId,
-    ) {
-        
-    }
+    ) {}
 }

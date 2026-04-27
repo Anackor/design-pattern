@@ -10,11 +10,11 @@ class RequestApprovalTest extends TestCase
 {
     public function testTemplateMethod()
     {
-        $vacationApproval = new VacationRequestApproval('vacation123');
+        $vacationApproval = new VacationRequestApproval();
         $result = $vacationApproval->processRequest();
         $this->assertEquals("Vacation request approved.\n", $result);
 
-        $budgetApproval = new BudgetRequestApproval('budget123');
+        $budgetApproval = new BudgetRequestApproval();
         $result = $budgetApproval->processRequest();
         $this->assertEquals("Budget request rejected.\n", $result);
     }

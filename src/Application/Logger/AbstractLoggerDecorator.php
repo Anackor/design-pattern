@@ -6,7 +6,7 @@ use App\Domain\Logger\LoggerInterface;
 
 /**
  * AbstractLoggerDecorator is the base class for all decorators.
- * 
+ *
  * It implements LoggerInterface and holds a reference to another LoggerInterface object.
  * Each decorator will extend this class to add functionality before/after the base log call.
  */

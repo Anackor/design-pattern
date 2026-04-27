@@ -6,19 +6,19 @@ use App\Domain\Form\FormFactoryInterface;
 use InvalidArgumentException;
 
 /**
- * The FormFactoryResolver is responsible for resolving and returning the appropriate form factory 
- * based on the requested type. This is a key part of the Abstract Factory pattern, where the goal 
- * is to provide a way to create families of related objects without specifying their concrete 
- * classes. In this case, it resolves which specific form factory (Html, Slack, Console) should 
+ * The FormFactoryResolver is responsible for resolving and returning the appropriate form factory
+ * based on the requested type. This is a key part of the Abstract Factory pattern, where the goal
+ * is to provide a way to create families of related objects without specifying their concrete
+ * classes. In this case, it resolves which specific form factory (Html, Slack, Console) should
  * be used based on the type provided.
  *
- * The Abstract Factory pattern is useful when there are multiple families of products (in this 
- * case, form components such as TextField, Button, and Checkbox) that need to be created for 
- * different environments (HTML, Slack, Console). By using this pattern, the system is flexible 
- * and easily extensible to support new types of form factories in the future without modifying 
+ * The Abstract Factory pattern is useful when there are multiple families of products (in this
+ * case, form components such as TextField, Button, and Checkbox) that need to be created for
+ * different environments (HTML, Slack, Console). By using this pattern, the system is flexible
+ * and easily extensible to support new types of form factories in the future without modifying
  * the core logic of the application.
  *
- * The FormFactoryResolver acts as the central point of access to the form factories, making it 
+ * The FormFactoryResolver acts as the central point of access to the form factories, making it
  * easy to resolve the correct factory to generate platform-specific forms and components.
  */
 class FormFactoryResolver
@@ -31,7 +31,7 @@ class FormFactoryResolver
 
     /**
      * Resolves the appropriate form factory based on the requested type.
-     * 
+     *
      * @param string $type The form type (html, slack, or console).
      * @return FormFactoryInterface The corresponding form factory.
      * @throws InvalidArgumentException if the type is not recognized.

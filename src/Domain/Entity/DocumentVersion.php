@@ -2,12 +2,11 @@
 
 namespace App\Domain\Entity;
 
-use App\Domain\Repository\DocumentVersionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "document_version")]
+#[ORM\Table(name: 'document_version')]
 class DocumentVersion
 {
     #[ORM\Id]
@@ -30,6 +29,8 @@ class DocumentVersion
 
     public function __construct(Document $document, string $content)
     {
+        $this->assertValidContent($content);
+
         $this->document = $document;
         $this->content = $content;
         $this->createdAt = new \DateTimeImmutable();
@@ -38,7 +39,7 @@ class DocumentVersion
         $document->addVersion($this);
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -48,23 +49,9 @@ class DocumentVersion
         return $this->document;
     }
 
-    public function setDocument(Document $document): static
-    {
-        $this->document = $document;
-
-        return $this;
-    }
-
     public function getContent(): string
     {
         return $this->content;
-    }
-
-    public function setContent(string $content): static
-    {
-        $this->content = $content;
-
-        return $this;
     }
 
     public function getVersionCode(): string
@@ -80,5 +67,12 @@ class DocumentVersion
     public function withNewContent(string $content): self
     {
         return new self($this->document, $content);
+    }
+
+    private function assertValidContent(string $content): void
+    {
+        if ('' === trim($content)) {
+            throw new \InvalidArgumentException('Document content cannot be empty.');
+        }
     }
 }

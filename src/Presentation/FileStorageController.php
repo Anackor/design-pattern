@@ -23,7 +23,7 @@ class FileStorageController
 
     /**
      * Reusable helper to validate Data Transfer Objects using Symfony's Validator component.
-     * By centralizing the validation logic, we avoid code duplication across controllers, 
+     * By centralizing the validation logic, we avoid code duplication across controllers,
      * ensure consistent error handling, and improve maintainability.
      */
     private function validateDto(object $dto): void
@@ -37,7 +37,7 @@ class FileStorageController
             throw new BadRequestHttpException(implode(', ', $messages));
         }
     }
-    
+
     #[Route('/file/upload', methods: ['POST'])]
     public function upload(Request $request): JsonResponse
     {

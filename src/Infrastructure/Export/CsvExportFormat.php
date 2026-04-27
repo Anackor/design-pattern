@@ -5,11 +5,11 @@ namespace App\Infrastructure\Export;
 use App\Domain\Export\ExportFormatInterface;
 
 /**
- * This class implements the ExportFormatInterface and provides 
+ * This class implements the ExportFormatInterface and provides
  * the logic for formatting data as CSV.
  *
- * It is the "ConcreteImplementor" in the Bridge pattern, and 
- * can easily be replaced or extended with other formats like 
+ * It is the "ConcreteImplementor" in the Bridge pattern, and
+ * can easily be replaced or extended with other formats like
  * JSON, XML, etc., without modifying the exporters.
  */
 class CsvExportFormat implements ExportFormatInterface

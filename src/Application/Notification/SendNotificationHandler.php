@@ -3,7 +3,7 @@
 namespace App\Application\Notification;
 
 use App\Application\DTO\NotificationRequestDTO;
-use App\Domain\Factory\NotificationFactoryInterface;
+use App\Application\Factory\NotificationFactoryInterface;
 
 class SendNotificationHandler
 {

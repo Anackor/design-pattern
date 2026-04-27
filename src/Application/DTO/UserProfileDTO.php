@@ -13,9 +13,13 @@ class UserProfileDTO
      * - Errors can be automatically handled by Symfony's validation system
      */
     public function __construct(
-        #[Assert\NotBlank] public int $userId,
-        #[Assert\Length(min: 9, max: 15)] public ?string $phone = null,
-        #[Assert\Length(min: 5)] public ?string $address = null,
-        #[Assert\Date] public ?string $birthdate = null
+        #[Assert\NotBlank]
+        public int $userId,
+        #[Assert\Length(min: 9, max: 15)]
+        public ?string $phone = null,
+        #[Assert\Length(min: 5)]
+        public ?string $address = null,
+        #[Assert\Date]
+        public ?string $birthdate = null
     ) {}
 }

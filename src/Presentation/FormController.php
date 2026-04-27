@@ -21,7 +21,7 @@ class FormController
     {
         $data = json_decode($request->getContent(), true);
         $dto = new FormRequestDTO(
-            $data['type'] ?? '', 
+            $data['type'] ?? '',
             $data['textFieldLabel'] ?? '',
             $data['checkboxLabel'] ?? '',
             $data['buttonLabel'] ?? ''

@@ -33,7 +33,7 @@ class CreateDocumentHandlerTest extends TestCase
                 return $document instanceof Document
                     && $document->getTitle() === $expectedTitle
                     && $document->getUser() === $user
-                    && $document->getLastVersion()?->getContent() === $expectedContent;
+                    && $document->getLastVersion()->getContent() === $expectedContent;
             }));
 
         $handler = new CreateDocumentHandler($repository, $mapper);
@@ -42,6 +42,6 @@ class CreateDocumentHandlerTest extends TestCase
         $this->assertInstanceOf(Document::class, $result);
         $this->assertEquals($expectedTitle, $result->getTitle());
         $this->assertEquals($user, $result->getUser());
-        $this->assertEquals($expectedContent, $result->getLastVersion()?->getContent());
+        $this->assertEquals($expectedContent, $result->getLastVersion()->getContent());
     }
 }

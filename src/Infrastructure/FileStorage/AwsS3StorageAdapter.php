@@ -3,7 +3,7 @@
 namespace App\Infrastructure\FileStorage;
 
 use App\Domain\Adapter\FileStorageInterface;
-use App\Domain\Client\AwsS3ClientInterface;
+use App\Infrastructure\Client\AwsS3ClientInterface;
 
 class AwsS3StorageAdapter implements FileStorageInterface
 {

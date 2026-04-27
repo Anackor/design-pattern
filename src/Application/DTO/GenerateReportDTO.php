@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Report;
+namespace App\Application\DTO;
 
 class GenerateReportDTO
 {

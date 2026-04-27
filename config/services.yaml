@@ -26,7 +26,7 @@ services:
 
     App\Application\Service\UserService:
         arguments:
-            $userRepository: '@App\Infrastructure\Repository\UserRepository'
+            $userRepository: '@App\Domain\Repository\UserRepositoryInterface'
 
     App\Application\GetUser\GetUserHandler:
         arguments:
@@ -35,7 +35,7 @@ services:
     App\Application\Product\CloneProductHandler:
         arguments:
             - '@App\Domain\Repository\ProductRepositoryInterface'
-            - '@App\Domain\Repository\ProductRepositoryInterface'
+            - '@App\Domain\Repository\CategoryRepositoryInterface'
             - '@App\Application\Prototype\ProductCloner'
 
     App\Application\BuilderUserProfile\CreateUserProfileHandler:
@@ -43,25 +43,33 @@ services:
             - '@App\Domain\Repository\UserRepositoryInterface'
             - '@App\Domain\Repository\UserProfileRepositoryInterface'
 
-    App\Infrastructure\Repository\UserRepositoryInterface:
+    App\Domain\Repository\UserRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineUserRepository
 
-    App\Infrastructure\Repository\UserProfileRepositoryInterface:
+    App\Domain\Repository\UserProfileRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineUserProfileRepository
 
-    App\Infrastructure\Repository\ProductRepositoryInterface:
-        alias: App\Infrastructure\Persistence\DoctrineProductProfileRepository
+    App\Domain\Repository\ProductRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineProductRepository
 
-    App\Infrastructure\Repository\CategoryRepositoryInterface:
-        alias: App\Infrastructure\Persistence\DoctrineCategoryProfileRepository
+    App\Domain\Repository\CategoryRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineCategoryRepository
 
-    App\Infrastructure\Repository\DocumentRepositoryInterface:
-        alias: App\Infrastructure\Persistence\DoctrineDocumentProfileRepository
+    App\Domain\Repository\DocumentRepositoryInterface:
+        alias: App\Infrastructure\Persistence\DoctrineDocumentRepository
 
-    App\Presentation\UserController:
-        autowire: true
-        autoconfigure: true
-        public: true
+    App\Application\Factory\NotificationFactoryInterface:
+        alias: App\Application\Factory\NotificationFactory
+
+    App\Application\File\FileStorageResolverInterface:
+        alias: App\Infrastructure\FileStorage\FileStorageResolver
+
+    App\Domain\Report\ReportAccessCheckerInterface:
+        alias: App\Infrastructure\Security\AccessChecker
+
+    App\Presentation\:
+        resource: '../src/Presentation/'
+        tags: ['controller.service_arguments']
 
     # ABSTRACT FACTORY
     App\Application\Factory\Form\HtmlFormFactory: ~
@@ -75,7 +83,7 @@ services:
             $consoleFactory: '@App\Application\Factory\Form\ConsoleFormFactory'
     # /ABSTRACT FACTORY
 
-    App\Application\BuilderUserProfile\BuildFormHandler:
+    App\Application\BuildForm\BuildFormHandler:
         arguments:
             - '@App\Application\Factory\Form\FormFactoryResolver'
 
@@ -100,14 +108,32 @@ services:
             $user: '%env(FTP_USER)%'
             $password: '%env(FTP_PASSWORD)%'
 
+    App\Infrastructure\Client\AwsS3Client:
+        arguments:
+            $key: '%env(AWS_ACCESS_KEY_ID)%'
+            $secret: '%env(AWS_SECRET_ACCESS_KEY)%'
+            $region: '%env(AWS_REGION)%'
+
+    App\Infrastructure\FileStorage\LocalFileStorageAdapter:
+        arguments:
+            $basePath: '%env(LOCAL_STORAGE_PATH)%'
+
+    App\Infrastructure\FileStorage\AwsS3StorageAdapter:
+        arguments:
+            $client: '@App\Infrastructure\Client\AwsS3ClientInterface'
+            $bucket: '%env(AWS_BUCKET)%'
+
     App\Infrastructure\FileStorage\FtpStorageAdapter:
         arguments:
             $client: '@App\Infrastructure\Client\FtpClient'
 
+    App\Infrastructure\Client\AwsS3ClientInterface:
+        alias: App\Infrastructure\Client\AwsS3Client
+
     # ReportServiceFactory
     App\Application\Report\ReportServiceFactory:
         arguments:
-            $userContext: '@App\Shared\Security\UserContext'
+            $accessChecker: '@App\Domain\Report\ReportAccessCheckerInterface'
 
     # Configure the ReportInterface to be resolved using the factory
     App\Domain\Report\ReportInterface:

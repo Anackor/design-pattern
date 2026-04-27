@@ -6,7 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "product")]
+#[ORM\Table(name: 'product')]
 class Product
 {
     #[ORM\Id]
@@ -38,9 +38,9 @@ class Product
         $this->category = $category;
     }
 
-    public function clone(): static
+    public function clone(): self
     {
-        return new static(
+        return new self(
             $this->name,
             $this->price,
             $this->description,

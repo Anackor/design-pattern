@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Infrastructure\FileStorage;
 
-use App\Domain\Client\AwsS3ClientInterface;
+use App\Infrastructure\Client\AwsS3ClientInterface;
 use App\Infrastructure\FileStorage\AwsS3StorageAdapter;
 use PHPUnit\Framework\TestCase;
 use Aws\Result;

@@ -12,7 +12,7 @@ class ChatRoomTest extends TestCase
     {
         $this->expectOutputRegex('/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] Alice: Hello Bob!/');
         $this->expectOutputRegex('/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] Bob: Hi Alice!/');
-    
+
         $chatRoom = new ChatRoom();
 
         $alice = new User('Alice', $chatRoom);

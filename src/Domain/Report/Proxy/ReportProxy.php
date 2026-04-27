@@ -2,15 +2,15 @@
 
 namespace App\Domain\Report\Proxy;
 
+use App\Domain\Report\ReportAccessCheckerInterface;
 use App\Domain\Report\ReportInterface;
-use App\Infrastructure\Security\AccessChecker;
 
 class ReportProxy implements ReportInterface
 {
     private LazyReportProxy $lazyReportProxy;
-    private AccessChecker $accessChecker;
+    private ReportAccessCheckerInterface $accessChecker;
 
-    public function __construct(LazyReportProxy $lazyReportProxy, AccessChecker $accessChecker)
+    public function __construct(LazyReportProxy $lazyReportProxy, ReportAccessCheckerInterface $accessChecker)
     {
         $this->lazyReportProxy = $lazyReportProxy;
         $this->accessChecker = $accessChecker;
@@ -30,7 +30,7 @@ class ReportProxy implements ReportInterface
         return $this->lazyReportProxy;
     }
 
-    public function getAccessChecker(): AccessChecker
+    public function getAccessChecker(): ReportAccessCheckerInterface
     {
         return $this->accessChecker;
     }

@@ -48,7 +48,7 @@ class Cart
     {
         return array_reduce(
             $this->items,
-            fn (float $total, ProductInterface $item) => $total + $item->getPrice(),
+            fn(float $total, ProductInterface $item) => $total + $item->getPrice(),
             0.0
         );
     }
@@ -58,6 +58,6 @@ class Cart
      */
     public function getItemNames(): array
     {
-        return array_map(fn (ProductInterface $item) => $item->getName(), $this->items);
+        return array_map(fn(ProductInterface $item) => $item->getName(), $this->items);
     }
 }

@@ -9,10 +9,10 @@ class VacationRequestApprovalTest extends TestCase
 {
     public function testVacationRequestApproval()
     {
-        $vacationApproval = new VacationRequestApproval('vacation123');
-        
+        $vacationApproval = new VacationRequestApproval();
+
         $result = $vacationApproval->processRequest();
-        
+
         $this->assertEquals("Vacation request approved.\n", $result);
     }
 }

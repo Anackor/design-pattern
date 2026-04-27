@@ -20,7 +20,7 @@ class CreateDocumentHandler
         [$title, $content, $user] = $this->mapper->fromCreateDTO($dto);
 
         $document = new Document($title, $user);
-        $document->addVersion(new DocumentVersion($document, $content));
+        new DocumentVersion($document, $content);
 
         $this->documentRepository->save($document);
 

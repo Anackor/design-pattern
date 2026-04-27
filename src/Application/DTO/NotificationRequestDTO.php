@@ -7,11 +7,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * This class leverages Symfony's validation constraints to ensure data integrity before processing any logic
- * 
+ *
  * That ensures not just the validation logic is centralized:
  * - The message parameter in each Assert rule allows us to define clear and user-friendly error outputs.
  * - These messages will appear in the API response when validation fails
- * 
+ *
  * Makes APIs more predictable and easier to debug.
  */
 class NotificationRequestDTO

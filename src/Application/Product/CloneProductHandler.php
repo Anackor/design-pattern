@@ -20,7 +20,7 @@ class CloneProductHandler
     {
         $original = $this->productRepository->findById($dto->originalId);
         if (!$original) {
-            throw new \InvalidArgumentException("Product not found");
+            throw new \InvalidArgumentException('Product not found');
         }
 
         $category = $dto->categoryId

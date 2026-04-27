@@ -7,11 +7,9 @@ use App\Domain\Order\OrderStateInterface;
 
 class ShippedState implements OrderStateInterface
 {
-    private Order $order;
-
     public function setContext(Order $order): void
     {
-        $this->order = $order;
+        // Shipped state doesn't require context.
     }
 
     public function pay(Order $order): void

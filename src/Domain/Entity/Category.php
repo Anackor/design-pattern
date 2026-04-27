@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "category")]
+#[ORM\Table(name: 'category')]
 class Category
 {
     #[ORM\Id]

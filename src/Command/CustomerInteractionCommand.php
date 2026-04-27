@@ -16,11 +16,11 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  * This class implements the Command Design Pattern, which encapsulates a request as an object.
  * It decouples the command invocation from the command execution, promoting flexibility,
  * scalability, and adherence to the single responsibility and open/closed principles.
- * 
- * This pattern is especially useful in CLI applications where user input dynamically 
+ *
+ * This pattern is especially useful in CLI applications where user input dynamically
  * triggers different operations, enabling clear separation between concerns and
  * a structured approach to handling executable tasks.
- * 
+ *
  * Execute this example with ```php bin/console customer:interact```
  */
 class CustomerInteractionCommand extends Command
@@ -61,7 +61,7 @@ class CustomerInteractionCommand extends Command
                 'Sync customer data',
                 'Create a new customer',
                 'Update customer details',
-                'Delete customer'
+                'Delete customer',
             ],
             0 // Default choice (index starts from 0)
         );
@@ -73,7 +73,8 @@ class CustomerInteractionCommand extends Command
         // Handle the user's choice and delegate to the corresponding command
         switch ($selectedOption) {
             case 'Sync customer data':
-                $this->syncExternalCustomerDataCommand->execute($input, $output);
+                $this->syncExternalCustomerDataCommand->execute();
+                $output->writeln('<info>Customer data synchronized successfully.</info>');
                 break;
             case 'Create a new customer':
                 $this->createCustomerCommand->execute($input, $output);

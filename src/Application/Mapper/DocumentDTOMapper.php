@@ -11,7 +11,7 @@ use App\Domain\Repository\UserRepositoryInterface as UserRepository;
  * Responsible for transforming incoming DTOs into fully constructed domain entities.
  * This mapper handles the resolution of relationships such as converting scalar IDs into actual entity isntances
  * by interacting with repositories or services
- * 
+ *
  * Benefits of using mappers:
  * - Promotes the separation of concerns (SoC) by keeping DTOs simple and controllers clean.
  * - Centralizes the transformation logic, making it easier to test and mantain

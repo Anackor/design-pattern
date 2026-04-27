@@ -15,12 +15,12 @@ class CloneProductHandlerTest extends TestCase
 {
     public function testCloneProductSuccessfully(): void
     {
-        $original = new Product('Original Product', 10.0, 'Original desc', new Category('Old Category'));
+        $original = new Product('Original Product', 10.0, 'Original desc', $this->buildCategory('Old Category'));
 
         $productRepository = $this->createMock(ProductRepository::class);
         $productRepository->method('findById')->with(1)->willReturn($original);
 
-        $category = new Category('New Category');
+        $category = $this->buildCategory('New Category');
         $categoryRepository = $this->createMock(CategoryRepository::class);
         $categoryRepository->method('findById')->with(2)->willReturn($category);
 
@@ -34,10 +34,10 @@ class CloneProductHandlerTest extends TestCase
             2
         );
 
-        $clonedProduct = new Product('Cloned Product', 12.5, 'Updated description', new Category('New Category'));
+        $clonedProduct = new Product('Cloned Product', 12.5, 'Updated description', $this->buildCategory('New Category'));
         $cloner = $this->createMock(ProductCloner::class);
         $cloner->method('cloneWithOverrides')->willReturn($clonedProduct);
-        
+
         $handler = new CloneProductHandler($productRepository, $categoryRepository, $cloner);
         $cloned = $handler->handle($dto);
 
@@ -46,5 +46,13 @@ class CloneProductHandlerTest extends TestCase
         $this->assertEquals(12.5, $cloned->getPrice());
         $this->assertEquals('Updated description', $cloned->getDescription());
         $this->assertEquals($category, $cloned->getCategory());
+    }
+
+    private function buildCategory(string $name): Category
+    {
+        $category = new Category();
+        $category->setName($name);
+
+        return $category;
     }
 }

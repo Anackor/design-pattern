@@ -5,7 +5,6 @@ namespace App\Application\Registration;
 use App\Application\DTO\NotificationRequestDTO;
 use App\Application\DTO\UserDataDTO;
 use App\Application\Notification\SendNotificationHandler;
-use App\Domain\Registration\UserRegistrationFacadeInterface;
 use App\Application\Registration\Service\UserCreator;
 use App\Application\Registration\Service\PasswordEncryptor;
 use App\Application\Registration\Service\WelcomeEmailSender;
@@ -21,7 +20,7 @@ use App\Domain\Enum\NotificationChannel;
  * for user registration within the application.
  *
  * The **Facade Pattern** is a structural design pattern that provides a higher-level interface
- * over a set of subsystems, making them easier to use. Instead of exposing the complexities of 
+ * over a set of subsystems, making them easier to use. Instead of exposing the complexities of
  * multiple components to the client, the facade encapsulates and coordinates them internally.
  *
  * ## Purpose of this Facade
@@ -49,7 +48,7 @@ use App\Domain\Enum\NotificationChannel;
  * ]);
  * ```
  *
- * @see \App\Domain\Registration\UserRegistrationFacadeInterface
+ * @see \App\Application\Registration\UserRegistrationFacadeInterface
  */
 class UserRegistrationFacade implements UserRegistrationFacadeInterface
 {

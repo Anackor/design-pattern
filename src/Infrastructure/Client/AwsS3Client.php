@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Client;
 
-use App\Domain\Client\AwsS3ClientInterface;
 use Aws\S3\S3Client;
 use Aws\Result;
 
@@ -10,7 +9,7 @@ class AwsS3Client implements AwsS3ClientInterface
 {
     private S3Client $client;
 
-    public function __construct(private string $bucket, string $key, string $secret, string $region)
+    public function __construct(string $key, string $secret, string $region)
     {
         $this->client = new S3Client([
             'region' => $region,

@@ -7,8 +7,7 @@ use App\Domain\Entity\User;
 
 class UserService
 {
-    public function __construct(private UserRepository $userRepository)
-    {}
+    public function __construct(private UserRepository $userRepository) {}
 
     public function createUser(string $name, string $email): User
     {
