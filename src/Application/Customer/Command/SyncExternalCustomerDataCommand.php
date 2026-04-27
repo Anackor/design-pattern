@@ -12,25 +12,15 @@ use App\Application\Customer\Service\CustomerService;
  */
 class SyncExternalCustomerDataCommand implements CommandInterface
 {
-    private CustomerService $customerService;
+    public function __construct(private CustomerService $customerService) {}
 
-    /**
-     * Constructor for SyncExternalCustomerDataCommand.
-     *
-     * @param CustomerService $customerService
-     */
-    public function __construct(CustomerService $customerService)
+    public function label(): string
     {
-        $this->customerService = $customerService;
+        return 'Sync customer data';
     }
 
-    /**
-     * Execute the synchronization of external customer data.
-     * It will use the CustomerSyncService to perform the actual data sync.
-     */
-    public function execute(): void
+    public function execute(CustomerCommandPayload $payload): CustomerCommandResult
     {
-        // Call the service to synchronize data
-        $this->customerService->syncCustomerData();
+        return new CustomerCommandResult($this->customerService->syncCustomerData());
     }
 }
