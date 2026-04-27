@@ -16,15 +16,13 @@ namespace App\Domain\Order;
  */
 interface OrderStateInterface
 {
-    public function setContext(Order $order): void;
+    public function pay(): OrderStateInterface;
 
-    public function pay(Order $order): void;
+    public function ship(): OrderStateInterface;
 
-    public function ship(Order $order): void;
+    public function deliver(): OrderStateInterface;
 
-    public function deliver(Order $order): void;
+    public function cancel(): OrderStateInterface;
 
-    public function cancel(Order $order): void;
-
-    public function getStatus(): string;
+    public function getStatus(): OrderStatus;
 }

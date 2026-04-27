@@ -2,38 +2,33 @@
 
 namespace App\Domain\Order\State;
 
-use App\Domain\Order\Order;
 use App\Domain\Order\OrderStateInterface;
+use App\Domain\Order\OrderStatus;
 
 class PaidState implements OrderStateInterface
 {
-    public function setContext(Order $order): void
-    {
-        // Paid state doesn't require context.
-    }
-
-    public function pay(Order $order): void
+    public function pay(): OrderStateInterface
     {
         throw new \LogicException('Order is already paid.');
     }
 
-    public function ship(Order $order): void
+    public function ship(): OrderStateInterface
     {
-        $order->setState(new ShippedState());
+        return new ShippedState();
     }
 
-    public function deliver(Order $order): void
+    public function deliver(): OrderStateInterface
     {
         throw new \LogicException('Cannot deliver an order that has not been shipped.');
     }
 
-    public function cancel(Order $order): void
+    public function cancel(): OrderStateInterface
     {
-        $order->setState(new CancelledState());
+        return new CancelledState();
     }
 
-    public function getStatus(): string
+    public function getStatus(): OrderStatus
     {
-        return 'paid';
+        return OrderStatus::PAID;
     }
 }
