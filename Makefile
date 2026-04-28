@@ -8,7 +8,7 @@ CONSOLE_ARGS ?=
 COMPOSER_ARGS ?=
 PHPUNIT_ARGS ?=
 
-.PHONY: build start stop logs ps shell console composer install test test-unit test-integration phpstan cs cs-fix deptrac coverage quality db migrate
+.PHONY: build start stop logs ps shell console composer install test test-unit test-integration observability-demo phpstan cs cs-fix deptrac coverage quality db migrate
 
 build:
 	$(COMPOSE) build
@@ -45,6 +45,9 @@ test-unit:
 
 test-integration:
 	$(COMPOSE) run --rm $(APP_SERVICE) php vendor/bin/phpunit --testsuite Integration $(PHPUNIT_ARGS)
+
+observability-demo:
+	$(COMPOSE) run --rm $(APP_SERVICE) php bin/console app:observability:demo --reset-log
 
 phpstan:
 	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer qa:phpstan"
