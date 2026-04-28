@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Factory;
+namespace App\Tests\Unit\Application\Factory;
 
 use App\Application\Factory\OAuthConfigFactory;
 use App\Domain\Entity\OAuthConfig;

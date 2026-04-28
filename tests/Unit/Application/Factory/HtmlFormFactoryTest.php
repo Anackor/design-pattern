@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Factory\Form;
+namespace App\Tests\Unit\Application\Factory;
 
 use App\Application\Factory\Form\HtmlFormFactory;
 use App\Domain\Form\Component\CheckboxInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Export;
+namespace App\Tests\Unit\Application\Export;
 
 use App\Application\Export\UserExporter;
 use App\Domain\Export\ExportFormatInterface;

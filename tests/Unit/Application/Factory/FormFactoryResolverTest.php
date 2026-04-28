@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Factory;
+namespace App\Tests\Unit\Application\Factory;
 
 use App\Application\Factory\Form\FormFactoryResolver;
 use App\Application\Factory\Form\HtmlFormFactory;

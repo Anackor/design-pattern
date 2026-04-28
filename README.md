@@ -61,6 +61,8 @@ Application endpoints are exposed at:
 - `make shell`: open a shell in the PHP container
 - `make console CONSOLE_ARGS="lint:container"`: run Symfony console commands
 - `make composer COMPOSER_ARGS="validate"`: run Composer commands inside Docker
+- `make test-unit`: run the unit suite only
+- `make test-integration`: run the integration suite only
 - `make phpstan`: run the base static analysis profile
 - `make cs`: run the formatter in dry-run mode
 - `make cs-fix`: apply formatting fixes
@@ -106,7 +108,7 @@ src/
 config/             Symfony configuration
 docker/             Docker source of truth
 migrations/         Doctrine migrations
-tests/              PHPUnit test suite
+tests/              PHPUnit test suite split into Unit/ and Integration/
 docs/planning/      Refactor roadmap and review notes
 ```
 

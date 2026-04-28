@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Service;
+namespace App\Tests\Unit\Application;
 
 use App\Application\Service\UserService;
 use App\Domain\Entity\User;

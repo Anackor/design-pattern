@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Domain\Report\Proxy;
+namespace App\Tests\Unit\Domain\Report;
 
 use App\Domain\Report\ReportAccessCheckerInterface;
 use App\Domain\Report\Proxy\ReportProxy;
@@ -37,5 +37,16 @@ class ReportProxyTest extends TestCase
         $this->expectExceptionMessage('Access Denied');
 
         $reportProxy->generate();
+    }
+
+    public function testProxyExposesCollaborators(): void
+    {
+        $lazyProxyMock = $this->createMock(LazyReportProxy::class);
+        $accessChecker = $this->createMock(ReportAccessCheckerInterface::class);
+
+        $reportProxy = new ReportProxy($lazyProxyMock, $accessChecker);
+
+        $this->assertSame($lazyProxyMock, $reportProxy->getProxy());
+        $this->assertSame($accessChecker, $reportProxy->getAccessChecker());
     }
 }

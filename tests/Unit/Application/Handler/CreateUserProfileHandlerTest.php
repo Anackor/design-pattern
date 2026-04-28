@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Handler;
+namespace App\Tests\Unit\Application\Handler;
 
 use App\Application\DTO\UserProfileDTO;
 use App\Application\BuilderUserProfile\CreateUserProfileHandler;

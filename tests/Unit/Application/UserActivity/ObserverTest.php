@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\tion\UserActivity;
+namespace App\Tests\Unit\Application\UserActivity;
 
 use PHPUnit\Framework\TestCase;
 use App\Application\UserActivity\UserActionSubject;

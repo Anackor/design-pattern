@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Payment\Validator;
+namespace App\Tests\Unit\Application\Payment\Validator;
 
 use PHPUnit\Framework\TestCase;
 use App\Application\Payment\Validator\AmountValidator;

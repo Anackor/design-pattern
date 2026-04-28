@@ -39,4 +39,32 @@ class DocumentTest extends TestCase
         $this->assertSame('Updated content', $updatedVersion->getContent());
         $this->assertSame($updatedVersion, $document->getLastVersion());
     }
+
+    public function testSetTitleAndGettersWorkForValidDocument(): void
+    {
+        $user = User::register('Doc Owner', 'doc-owner@example.com');
+        $document = new Document('Contract', $user);
+
+        $this->assertNull($document->getId());
+        $this->assertSame('Contract', $document->getTitle());
+        $this->assertSame($user, $document->getUser());
+
+        $document->setTitle('Updated Contract');
+
+        $this->assertSame('Updated Contract', $document->getTitle());
+        $this->assertCount(0, $document->getVersions());
+    }
+
+    public function testAddVersionRejectsVersionFromDifferentDocument(): void
+    {
+        $owner = User::register('Doc Owner', 'doc-owner@example.com');
+        $document = new Document('Contract', $owner);
+        $anotherDocument = new Document('Invoice', $owner);
+        $foreignVersion = new DocumentVersion($anotherDocument, 'Different content');
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Document version belongs to a different document.');
+
+        $document->addVersion($foreignVersion);
+    }
 }

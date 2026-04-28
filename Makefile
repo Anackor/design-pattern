@@ -8,7 +8,7 @@ CONSOLE_ARGS ?=
 COMPOSER_ARGS ?=
 PHPUNIT_ARGS ?=
 
-.PHONY: build start stop logs ps shell console composer install test phpstan cs cs-fix deptrac coverage quality db migrate
+.PHONY: build start stop logs ps shell console composer install test test-unit test-integration phpstan cs cs-fix deptrac coverage quality db migrate
 
 build:
 	$(COMPOSE) build
@@ -39,6 +39,12 @@ install:
 
 test:
 	$(COMPOSE) run --rm $(APP_SERVICE) php vendor/bin/phpunit $(PHPUNIT_ARGS)
+
+test-unit:
+	$(COMPOSE) run --rm $(APP_SERVICE) php vendor/bin/phpunit --testsuite Unit $(PHPUNIT_ARGS)
+
+test-integration:
+	$(COMPOSE) run --rm $(APP_SERVICE) php vendor/bin/phpunit --testsuite Integration $(PHPUNIT_ARGS)
 
 phpstan:
 	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer qa:phpstan"
