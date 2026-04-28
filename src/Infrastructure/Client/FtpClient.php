@@ -22,12 +22,12 @@ class FtpClient
 
     public function put(string $remotePath, string $localPath): bool
     {
-        return ftp_put($this->connection, $remotePath, $localPath, FTP_BINARY);
+        return ftp_put($this->connection, $remotePath, $localPath, \FTP_BINARY);
     }
 
     public function get(string $remotePath, string $localPath): bool
     {
-        return ftp_get($this->connection, $localPath, $remotePath, FTP_BINARY);
+        return ftp_get($this->connection, $localPath, $remotePath, \FTP_BINARY);
     }
 
     public function delete(string $path): bool

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\FormWizard;
+namespace App\Tests\Unit\Application\FormWizard;
 
 use App\Application\FormWizard\FormWizard;
 use App\Application\FormWizard\FormHistoryManager;

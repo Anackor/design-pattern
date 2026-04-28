@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Service;
+namespace App\Tests\Unit\Application\Service;
 
 use App\Application\Service\UserImportService;
 use App\Domain\Flyweight\CountryFlyweightFactory;

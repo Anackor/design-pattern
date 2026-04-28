@@ -61,6 +61,9 @@ Application endpoints are exposed at:
 - `make shell`: open a shell in the PHP container
 - `make console CONSOLE_ARGS="lint:container"`: run Symfony console commands
 - `make composer COMPOSER_ARGS="validate"`: run Composer commands inside Docker
+- `make test-unit`: run the unit suite only
+- `make test-integration`: run the integration suite only
+- `make observability-demo`: generate and print a reproducible structured logging demo
 - `make phpstan`: run the base static analysis profile
 - `make cs`: run the formatter in dry-run mode
 - `make cs-fix`: apply formatting fixes
@@ -95,6 +98,34 @@ The initial quality tooling is intentionally pragmatic:
 - Deptrac is configured as an architectural diagnostic, not as a required bundle gate yet
 - Coverage is generated under `var/coverage`
 
+## Observability
+
+The project now includes a small didactic structured logger that writes JSON lines to `var/log/observability.log`.
+
+It is intentionally applied only where observability teaches something real:
+
+- `CreateUserProfileHandler`: logs start, user-not-found, invalid payload and success.
+- `SendNotificationHandler`: logs outbound notification attempts, resolved channel and failures.
+- `ActivityLogger`: turns the Observer example into a structured logging sidecar.
+
+The rules are part of the lesson:
+
+- event names stay stable and machine-friendly, for example `user_profile.create.started`;
+- useful metadata goes into context instead of string concatenation;
+- sensitive payloads are minimized, so we log identifiers, lengths or masked receivers rather than full content.
+
+Reproduce the current example with:
+
+```sh
+make observability-demo
+```
+
+That command clears `var/log/observability.log`, triggers Observer and notification flows, and prints the JSON records generated in that run.
+
+## Code Tour
+
+Use [CODE-TOUR.md](CODE-TOUR.md) for a short guided walkthrough built only on commands and tests that are currently verified in this repository.
+
 ## Repository structure
 
 ```text
@@ -106,7 +137,7 @@ src/
 config/             Symfony configuration
 docker/             Docker source of truth
 migrations/         Doctrine migrations
-tests/              PHPUnit test suite
+tests/              PHPUnit test suite split into Unit/ and Integration/
 docs/planning/      Refactor roadmap and review notes
 ```
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Application\Cart;
+namespace App\Tests\Unit\Application\Cart;
 
 use PHPUnit\Framework\TestCase;
 use App\Application\Cart\Cart;
@@ -37,5 +37,17 @@ class CartTest extends TestCase
 
         // Total: 12.99 + 7.48 + 20.47 = 40.94
         $this->assertEquals(40.94, $cart->getTotal());
+    }
+
+    public function testGetItemNamesReturnsTopLevelItemNames(): void
+    {
+        $cart = new Cart();
+        $cart->addItem(new SingleProduct('Book', 12.99));
+
+        $bundle = new ProductBundle('Stationery Set');
+        $bundle->add(new SingleProduct('Pen', 1.99));
+        $cart->addItem($bundle);
+
+        $this->assertSame(['Book', 'Stationery Set'], $cart->getItemNames());
     }
 }

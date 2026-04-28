@@ -68,6 +68,28 @@ class CsvRowCounterServiceTest extends TestCase
         $this->assertSame(['john@example.com', 'jane@example.com'], $emails);
     }
 
+    public function testProcessorCanFilterRows(): void
+    {
+        $processor = new CsvProcessor(new CsvFileIterator($this->filePath));
+
+        $filtered = $processor->filter(static fn(array $row): bool => $row['name'] === 'Jane');
+
+        $this->assertCount(1, $filtered);
+        $this->assertSame('jane@example.com', $filtered[0]['email']);
+    }
+
+    public function testProcessorCanProcessRowsWithSideEffects(): void
+    {
+        $processor = new CsvProcessor(new CsvFileIterator($this->filePath));
+        $processedNames = [];
+
+        $processor->process(static function (array $row) use (&$processedNames): void {
+            $processedNames[] = strtoupper($row['name']);
+        });
+
+        $this->assertSame(['JOHN', 'JANE'], $processedNames);
+    }
+
     public function testIteratorRejectsRowsWithUnexpectedColumnCount(): void
     {
         $filePath = __DIR__ . '/fixtures/broken.csv';

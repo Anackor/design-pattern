@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.observability.log_file: '%kernel.logs_dir%/observability.log'
 
 services:
     # default configuration for services in *this* file
@@ -19,6 +20,14 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Domain/Entity/'
             - '../src/Kernel.php'
+
+    Psr\Log\LoggerInterface:
+        alias: App\Infrastructure\Observability\StructuredFileLogger
+
+    App\Infrastructure\Observability\StructuredFileLogger:
+        arguments:
+            $logFilePath: '%app.observability.log_file%'
+            $channel: 'application'
 
     # Add validator as service (not necessary if using autowiring)
     App\Application\Validator\Constraints\CategoryExistsValidator:
@@ -40,8 +49,20 @@ services:
 
     App\Application\BuilderUserProfile\CreateUserProfileHandler:
         arguments:
-            - '@App\Domain\Repository\UserRepositoryInterface'
-            - '@App\Domain\Repository\UserProfileRepositoryInterface'
+            $userRepository: '@App\Domain\Repository\UserRepositoryInterface'
+            $userProfileRepository: '@App\Domain\Repository\UserProfileRepositoryInterface'
+
+    App\Application\UserActivity\UserActionSubjectInterface:
+        alias: App\Application\UserActivity\UserActionSubject
+
+    App\Application\UserActivity\UserActionSubject:
+        calls:
+            - attach: ['@App\Application\UserActivity\Observer\ActivityLogger']
+            - attach: ['@App\Application\UserActivity\Observer\UserMetricsTracker']
+
+    App\Command\ObservabilityDemoCommand:
+        arguments:
+            $logFilePath: '%app.observability.log_file%'
 
     App\Domain\Repository\UserRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineUserRepository

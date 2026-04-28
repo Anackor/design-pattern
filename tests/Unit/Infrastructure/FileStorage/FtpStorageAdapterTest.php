@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Infrastructure\Adapter;
+namespace App\Tests\Unit\Infrastructure\FileStorage;
 
 use PHPUnit\Framework\TestCase;
 use App\Infrastructure\Client\FtpClient;

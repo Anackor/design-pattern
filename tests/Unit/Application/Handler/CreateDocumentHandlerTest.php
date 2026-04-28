@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Document;
+namespace App\Tests\Unit\Application\Handler;
 
 use App\Application\DTO\CreateDocumentDTO;
 use App\Application\Document\CreateDocumentHandler;

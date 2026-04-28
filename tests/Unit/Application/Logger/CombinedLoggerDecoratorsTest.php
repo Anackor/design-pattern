@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Tests\Unit\Application\Logger;
+
 use App\Domain\Logger\LoggerInterface;
 use PHPUnit\Framework\TestCase;
 use App\Application\Logger\TimestampLoggerDecorator;

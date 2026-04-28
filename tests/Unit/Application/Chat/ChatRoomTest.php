@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Chat;
+namespace App\Tests\Unit\Application\Chat;
 
 use App\Application\Chat\ChatRoom;
 use App\Application\Chat\User;

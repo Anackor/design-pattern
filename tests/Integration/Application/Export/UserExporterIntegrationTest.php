@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Export;
+namespace App\Tests\Integration\Application\Export;
 
 use App\Application\Export\UserExporter;
 use App\Infrastructure\Export\CsvExportFormat;

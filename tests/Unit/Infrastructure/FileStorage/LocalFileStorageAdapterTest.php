@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Infrastructure\Adapter;
+namespace App\Tests\Unit\Infrastructure\FileStorage;
 
 use App\Infrastructure\FileStorage\LocalFileStorageAdapter;
 use PHPUnit\Framework\TestCase;

@@ -33,8 +33,8 @@ class NotificationController
 
         $notificationDTO = new NotificationRequestDTO(
             $data['title'],
-            $data['receiver'],
             $data['message'],
+            $data['receiver'],
             $data['channel']
         );
 

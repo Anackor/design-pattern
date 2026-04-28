@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Domain\Report\Proxy;
+namespace App\Tests\Unit\Domain\Report;
 
 use App\Domain\Report\Proxy\LazyReportProxy;
 use App\Domain\Report\ReportInterface;

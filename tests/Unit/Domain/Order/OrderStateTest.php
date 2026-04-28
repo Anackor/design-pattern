@@ -5,8 +5,11 @@ namespace App\Tests\Unit\Domain\Order;
 use App\Domain\Order\Order;
 use App\Domain\Order\OrderId;
 use App\Domain\Order\OrderStatus;
+use App\Domain\Order\State\CancelledState;
+use App\Domain\Order\State\DeliveredState;
 use App\Domain\Order\State\PendingState;
 use App\Domain\Order\State\PaidState;
+use App\Domain\Order\State\ShippedState;
 use PHPUnit\Framework\TestCase;
 
 class OrderStateTest extends TestCase
@@ -139,5 +142,74 @@ class OrderStateTest extends TestCase
         $order = Order::place('order-1', new PaidState());
 
         $this->assertSame(OrderStatus::PAID, $order->getStatus());
+    }
+
+    public function testCancelledStateRejectsAllTransitions(): void
+    {
+        $state = new CancelledState();
+
+        $this->assertSame(OrderStatus::CANCELLED, $state->getStatus());
+
+        foreach (
+            [
+                ['pay', 'Order is cancelled and cannot be paid.'],
+                ['ship', 'Order is cancelled and cannot be shipped.'],
+                ['deliver', 'Order is cancelled and cannot be delivered.'],
+                ['cancel', 'Order is already cancelled.'],
+            ] as [$method, $message]
+        ) {
+            try {
+                $state->{$method}();
+                $this->fail('Expected logic exception was not thrown.');
+            } catch (\LogicException $exception) {
+                $this->assertSame($message, $exception->getMessage());
+            }
+        }
+    }
+
+    public function testDeliveredStateRejectsFurtherTransitions(): void
+    {
+        $state = new DeliveredState();
+
+        $this->assertSame(OrderStatus::DELIVERED, $state->getStatus());
+
+        foreach (
+            [
+                ['pay', 'Order is already delivered.'],
+                ['ship', 'Order is already delivered.'],
+                ['deliver', 'Order is already delivered.'],
+                ['cancel', 'Cannot cancel a delivered order.'],
+            ] as [$method, $message]
+        ) {
+            try {
+                $state->{$method}();
+                $this->fail('Expected logic exception was not thrown.');
+            } catch (\LogicException $exception) {
+                $this->assertSame($message, $exception->getMessage());
+            }
+        }
+    }
+
+    public function testShippedStateCanOnlyTransitionToDelivered(): void
+    {
+        $state = new ShippedState();
+
+        $this->assertSame(OrderStatus::SHIPPED, $state->getStatus());
+        $this->assertSame(OrderStatus::DELIVERED, $state->deliver()->getStatus());
+
+        foreach (
+            [
+                ['pay', 'Order is already paid and shipped.'],
+                ['ship', 'Order is already shipped.'],
+                ['cancel', 'Cannot cancel an order that has been shipped.'],
+            ] as [$method, $message]
+        ) {
+            try {
+                $state->{$method}();
+                $this->fail('Expected logic exception was not thrown.');
+            } catch (\LogicException $exception) {
+                $this->assertSame($message, $exception->getMessage());
+            }
+        }
     }
 }
