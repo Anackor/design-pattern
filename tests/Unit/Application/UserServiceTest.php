@@ -16,7 +16,7 @@ class UserServiceTest extends TestCase
 
         // Definir comportamiento del mock
         $userRepository->expects($this->once())
-            ->method('save')
+            ->method('addRegisteredUser')
             ->with($this->isInstanceOf(User::class));
 
         // Crear el servicio con el repositorio mockeado

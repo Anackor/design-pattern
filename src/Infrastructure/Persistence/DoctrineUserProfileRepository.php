@@ -15,19 +15,19 @@ class DoctrineUserProfileRepository implements UserProfileRepositoryInterface
         $this->entityManager = $entityManager;
     }
 
-    public function findById(int $id): ?UserProfile
+    public function profileOfId(int $profileId): ?UserProfile
     {
-        return $this->entityManager->find(UserProfile::class, $id);
+        return $this->entityManager->find(UserProfile::class, $profileId);
     }
 
-    public function findAll(): array
+    public function allProfiles(): array
     {
         return $this->entityManager->getRepository(UserProfile::class)->findAll();
     }
 
-    public function save(UserProfile $user): void
+    public function addProfile(UserProfile $profile): void
     {
-        $this->entityManager->persist($user);
+        $this->entityManager->persist($profile);
         $this->entityManager->flush();
     }
 }

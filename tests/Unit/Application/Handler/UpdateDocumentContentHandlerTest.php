@@ -26,7 +26,7 @@ class UpdateDocumentContentHandlerTest extends TestCase
 
         $repository = $this->createMock(DocumentRepository::class);
         $repository->expects($this->once())
-            ->method('save')
+            ->method('store')
             ->with($document);
 
         $handler = new UpdateDocumentContentHandler($repository, $mapper);

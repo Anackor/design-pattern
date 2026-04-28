@@ -2,9 +2,10 @@
 
 namespace App\Domain\Discount;
 
-use App\Domain\Product\Product;
+use App\Domain\Cart\ProductInterface;
+use App\Shared\ValueObject\Money;
 
 interface DiscountVisitorInterface
 {
-    public function visit(Product $product): float;
+    public function visit(ProductInterface $product): Money;
 }

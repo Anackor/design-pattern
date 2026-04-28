@@ -15,17 +15,17 @@ class DoctrineUserRepository implements UserRepositoryInterface
         $this->entityManager = $entityManager;
     }
 
-    public function findById(int $id): ?User
+    public function registeredUserOfId(int $userId): ?User
     {
-        return $this->entityManager->find(User::class, $id);
+        return $this->entityManager->find(User::class, $userId);
     }
 
-    public function findAll(): array
+    public function allRegisteredUsers(): array
     {
         return $this->entityManager->getRepository(User::class)->findAll();
     }
 
-    public function save(User $user): void
+    public function addRegisteredUser(User $user): void
     {
         $this->entityManager->persist($user);
         $this->entityManager->flush();

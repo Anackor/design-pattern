@@ -2,38 +2,33 @@
 
 namespace App\Domain\Order\State;
 
-use App\Domain\Order\Order;
 use App\Domain\Order\OrderStateInterface;
+use App\Domain\Order\OrderStatus;
 
 class DeliveredState implements OrderStateInterface
 {
-    public function setContext(Order $order): void
-    {
-        // Delivered state doesn't require context
-    }
-
-    public function pay(Order $order): void
+    public function pay(): OrderStateInterface
     {
         throw new \LogicException('Order is already delivered.');
     }
 
-    public function ship(Order $order): void
+    public function ship(): OrderStateInterface
     {
         throw new \LogicException('Order is already delivered.');
     }
 
-    public function deliver(Order $order): void
+    public function deliver(): OrderStateInterface
     {
         throw new \LogicException('Order is already delivered.');
     }
 
-    public function cancel(Order $order): void
+    public function cancel(): OrderStateInterface
     {
         throw new \LogicException('Cannot cancel a delivered order.');
     }
 
-    public function getStatus(): string
+    public function getStatus(): OrderStatus
     {
-        return 'delivered';
+        return OrderStatus::DELIVERED;
     }
 }

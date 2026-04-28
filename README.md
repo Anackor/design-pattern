@@ -112,30 +112,34 @@ docs/planning/      Refactor roadmap and review notes
 
 ## Design patterns currently represented
 
-- Repository
-- Builder
-- Factory Method
-- Abstract Factory
-- Prototype
-- Immutable Object
-- Singleton
-- Factory Function
-- Adapter
-- Bridge
-- Composite
-- Decorator
-- Facade
-- Flyweight
-- Proxy
-- Chain of Responsibility
-- Command
-- Iterator
-- Mediator
-- Memento
-- Observer
-- State
-- Strategy
-- Template Method
-- Visitor
+This project is intentionally hybrid: some patterns support the HTTP/API flow, and others are didactic examples designed to be small, executable and easy to study.
 
-The project is still being tightened so that each pattern is backed by a real use case, executable code and tests.
+| Pattern | Main example | Intent | Status |
+| --- | --- | --- | --- |
+| Repository | `src/Domain/Repository/*`, `src/Infrastructure/Persistence/*` | Domain-facing persistence ports with use-case language | Application flow |
+| Builder | `UserProfileBuilder` | Step-by-step construction with explicit validation | Application flow |
+| Factory Method | `NotificationFactory` | Create notification implementations from a typed channel | Application flow |
+| Abstract Factory | `FormFactoryResolver` and form factories | Render equivalent form components for multiple channels | Didactic executable |
+| Prototype | `ProductCloner`, `ProductCloneOverrides` | Clone catalog products with typed overrides | Application flow |
+| Immutable Object | `DocumentVersion` | Preserve document history through new versions | Application flow |
+| Singleton | `EmailTemplateRegistry` | Shared template registry with controlled reset for tests | Didactic executable |
+| Factory Function | `OAuthConfigFactory` | Build OAuth config objects from provider keys | Didactic executable |
+| Adapter | `FileStorageInterface` implementations | Normalize local, FTP and S3 storage operations | Application flow |
+| Bridge | `ReportInterface` plus report generation wiring | Decouple report abstraction from access checking | Didactic executable |
+| Composite | `Cart`, `SingleProduct`, `ProductBundle` | Treat single products and bundles uniformly | Didactic executable |
+| Decorator | Application logger decorators | Layer message transformations around a logger | Didactic executable |
+| Facade | `UserRegistrationFacade` | Coordinate user creation and welcome notification | Application flow |
+| Flyweight | `Country`, `UserType` factories | Reuse normalized repeated values during import | Application flow |
+| Proxy | `ReportProxy`, `LazyReportProxy` | Add access control or lazy creation around reports | Didactic executable |
+| Chain of Responsibility | Payment validators | Stop payment validation on the first failing rule | Didactic executable |
+| Command | Customer command objects plus Symfony invoker | Encapsulate customer actions as executable requests | Didactic executable |
+| Iterator | `CsvFileIterator`, `CsvProcessor` | Traverse, map and filter CSV rows safely | Didactic executable |
+| Mediator | `ChatRoom` | Centralize message routing between chat users | Didactic executable |
+| Memento | `FormWizardSnapshot`, `FormHistoryManager` | Save and restore wizard state | Didactic executable |
+| Observer | User activity subject and observers | Notify metrics/logging observers about user actions | Didactic executable |
+| State | `Order` and order states | Model allowed order transitions explicitly | Didactic executable |
+| Strategy | Sort strategies | Swap sorting algorithms behind a stable service | Didactic executable |
+| Template Method | Request approval workflow | Reuse approval skeleton with specialized steps | Didactic executable |
+| Visitor | `DiscountCart` and discount visitors | Apply external discount operations to cart items | Didactic executable |
+
+Each listed pattern has executable code and targeted tests. The labels above are deliberately honest: "Application flow" means the pattern participates in an HTTP/use-case path, while "Didactic executable" means it is primarily a training example that remains runnable and tested.

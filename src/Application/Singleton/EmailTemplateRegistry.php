@@ -21,15 +21,21 @@ namespace App\Application\Singleton;
  */
 class EmailTemplateRegistry
 {
+    private const DEFAULT_TEMPLATES = [
+        'welcome' => 'emails/welcome.html.twig',
+        'reset_password' => 'emails/reset_password.html.twig',
+    ];
+
     private static ?self $instance = null;
+
+    /**
+     * @var array<string, string>
+     */
     private array $templates;
 
     private function __construct()
     {
-        $this->templates = [
-            'welcome' => 'emails/welcome.html.twig',
-            'reset_password' => 'emails/reset_password.html.twig',
-        ];
+        $this->templates = self::DEFAULT_TEMPLATES;
     }
 
     public static function getInstance(): self
@@ -39,11 +45,49 @@ class EmailTemplateRegistry
 
     public function get(string $key): string
     {
-        return $this->templates[$key] ?? throw new \InvalidArgumentException("Template key '{$key}' not found.");
+        $normalizedKey = $this->normalize($key, 'Template key');
+
+        return $this->templates[$normalizedKey] ?? throw new \InvalidArgumentException("Template key '{$normalizedKey}' not found.");
+    }
+
+    public function has(string $key): bool
+    {
+        return isset($this->templates[$this->normalize($key, 'Template key')]);
+    }
+
+    public function register(string $key, string $templatePath): void
+    {
+        $this->templates[$this->normalize($key, 'Template key')] = $this->normalize($templatePath, 'Template path');
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function all(): array
+    {
+        return $this->templates;
     }
 
     public function reset(): void
     {
         self::$instance = null;
+    }
+
+    private function __clone() {}
+
+    public function __wakeup(): void
+    {
+        throw new \LogicException('EmailTemplateRegistry cannot be unserialized.');
+    }
+
+    private function normalize(string $value, string $label): string
+    {
+        $normalized = trim($value);
+
+        if ('' === $normalized) {
+            throw new \InvalidArgumentException(sprintf('%s cannot be empty.', $label));
+        }
+
+        return $normalized;
     }
 }

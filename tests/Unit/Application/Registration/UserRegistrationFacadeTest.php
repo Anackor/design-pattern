@@ -19,9 +19,7 @@ class UserRegistrationFacadeTest extends TestCase
         $password = 'password';
         $userData = new UserDataDTO($userName, $userEmail, $password);
 
-        $user = new User();
-        $user->setEmail($userEmail);
-        $user->setName($userName);
+        $user = User::register($userName, $userEmail);
 
         $userServiceMock = $this->createMock(UserService::class);
         $userServiceMock->expects($this->once())

@@ -10,10 +10,7 @@ namespace App\Application\Customer\Command;
  */
 interface CommandInterface
 {
-    /**
-     * Execute the command logic.
-     *
-     * This method will contain the business logic or interact with services to perform actions.
-     */
-    public function execute(): void;
+    public function label(): string;
+
+    public function execute(CustomerCommandPayload $payload): CustomerCommandResult;
 }

@@ -2,38 +2,33 @@
 
 namespace App\Domain\Order\State;
 
-use App\Domain\Order\Order;
 use App\Domain\Order\OrderStateInterface;
+use App\Domain\Order\OrderStatus;
 
 class PendingState implements OrderStateInterface
 {
-    public function setContext(Order $order): void
+    public function pay(): OrderStateInterface
     {
-        // Pending state doesn't require context.
+        return new PaidState();
     }
 
-    public function pay(Order $order): void
-    {
-        $order->setState(new PaidState());
-    }
-
-    public function ship(Order $order): void
+    public function ship(): OrderStateInterface
     {
         throw new \LogicException('Cannot ship an order that has not been paid.');
     }
 
-    public function deliver(Order $order): void
+    public function deliver(): OrderStateInterface
     {
         throw new \LogicException('Cannot deliver an order that has not been shipped.');
     }
 
-    public function cancel(Order $order): void
+    public function cancel(): OrderStateInterface
     {
-        $order->setState(new CancelledState());
+        return new CancelledState();
     }
 
-    public function getStatus(): string
+    public function getStatus(): OrderStatus
     {
-        return 'pending';
+        return OrderStatus::PENDING;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Domain\Order;
 
+use App\Domain\Order\State\PendingState;
+
 /**
  * Class Order
  *
@@ -19,25 +21,30 @@ namespace App\Domain\Order;
  */
 class Order
 {
-    private string $id;
+    private OrderId $id;
     private OrderStateInterface $state;
 
-    public function __construct(string $id, OrderStateInterface $initialState)
+    private function __construct(OrderId $id, OrderStateInterface $initialState)
     {
         $this->id = $id;
         $this->state = $initialState;
-        $this->state->setContext($this);
+    }
+
+    public static function place(string|OrderId $id, ?OrderStateInterface $initialState = null): self
+    {
+        $orderId = $id instanceof OrderId ? $id : OrderId::fromString($id);
+
+        return new self($orderId, $initialState ?? new PendingState());
     }
 
     public function getId(): string
     {
-        return $this->id;
+        return $this->id->value();
     }
 
-    public function setState(OrderStateInterface $state): void
+    public function getOrderId(): OrderId
     {
-        $this->state = $state;
-        $this->state->setContext($this);
+        return $this->id;
     }
 
     public function getState(): OrderStateInterface
@@ -45,23 +52,33 @@ class Order
         return $this->state;
     }
 
+    public function getStatus(): OrderStatus
+    {
+        return $this->state->getStatus();
+    }
+
     public function pay(): void
     {
-        $this->state->pay($this);
+        $this->transitionTo($this->state->pay());
     }
 
     public function ship(): void
     {
-        $this->state->ship($this);
+        $this->transitionTo($this->state->ship());
     }
 
     public function deliver(): void
     {
-        $this->state->deliver($this);
+        $this->transitionTo($this->state->deliver());
     }
 
     public function cancel(): void
     {
-        $this->state->cancel($this);
+        $this->transitionTo($this->state->cancel());
+    }
+
+    private function transitionTo(OrderStateInterface $state): void
+    {
+        $this->state = $state;
     }
 }

@@ -31,9 +31,18 @@ use Iterator;
 class CsvFileIterator implements Iterator
 {
     private $file;
-    private $headers;
-    private $current;
-    private int $key = 0;
+
+    /**
+     * @var list<string>
+     */
+    private array $headers;
+
+    /**
+     * @var array<string, string|null>|null
+     */
+    private ?array $current = null;
+
+    private int $key = -1;
 
     public function __construct(string $filePath)
     {
@@ -42,12 +51,16 @@ class CsvFileIterator implements Iterator
             throw new \RuntimeException("Unable to open file: $filePath");
         }
 
-        $this->headers = fgetcsv($this->file);
+        $this->headers = $this->readHeaders();
         $this->next();
     }
 
     public function current(): array
     {
+        if (!$this->valid()) {
+            throw new \LogicException('Cannot read the current CSV row because the iterator is not valid.');
+        }
+
         return $this->current;
     }
 
@@ -62,16 +75,16 @@ class CsvFileIterator implements Iterator
         if ($row === false) {
             $this->current = null;
         } else {
-            $this->current = array_combine($this->headers, $row);
             $this->key++;
+            $this->current = $this->combineRow($row);
         }
     }
 
     public function rewind(): void
     {
         rewind($this->file);
-        $this->headers = fgetcsv($this->file);
-        $this->key = 0;
+        $this->headers = $this->readHeaders();
+        $this->key = -1;
         $this->next();
     }
 
@@ -82,6 +95,54 @@ class CsvFileIterator implements Iterator
 
     public function __destruct()
     {
-        fclose($this->file);
+        if (is_resource($this->file)) {
+            fclose($this->file);
+        }
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function headers(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function readHeaders(): array
+    {
+        $headers = fgetcsv($this->file);
+
+        if ($headers === false) {
+            throw new \RuntimeException('CSV file must contain a header row.');
+        }
+
+        $normalizedHeaders = array_map(static fn(?string $header): string => trim((string) $header), $headers);
+
+        if (count(array_filter($normalizedHeaders)) === 0) {
+            throw new \RuntimeException('CSV file must contain a header row.');
+        }
+
+        return $normalizedHeaders;
+    }
+
+    /**
+     * @param list<string|null> $row
+     * @return array<string, string|null>
+     */
+    private function combineRow(array $row): array
+    {
+        if (count($row) !== count($this->headers)) {
+            throw new \RuntimeException(sprintf(
+                'CSV row %d has %d columns, expected %d.',
+                $this->key,
+                count($row),
+                count($this->headers)
+            ));
+        }
+
+        return array_combine($this->headers, $row);
     }
 }

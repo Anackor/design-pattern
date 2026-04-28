@@ -2,16 +2,15 @@
 
 namespace App\Domain\Discount;
 
-use App\Domain\Product\Product;
+use App\Domain\Cart\ProductInterface;
+use App\Shared\ValueObject\Money;
 
 class SeasonalDiscountVisitor implements DiscountVisitorInterface
 {
-    public function visit(Product $product): float
+    public function visit(ProductInterface $product): Money
     {
         $price = $product->getPrice();
 
-        $price *= 0.85;
-
-        return $price;
+        return $price->multiply(0.85);
     }
 }

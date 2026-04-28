@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Application\Customer\Command\SyncExternalCustomerDataCommand;
 use App\Application\Customer\Command\CreateCustomerCommand;
+use App\Application\Customer\Command\CustomerCommandPayload;
 use App\Application\Customer\Command\UpdateCustomerCommand;
 use App\Application\Customer\Command\DeleteCustomerCommand;
 use Symfony\Component\Console\Command\Command;
@@ -25,22 +26,13 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  */
 class CustomerInteractionCommand extends Command
 {
-    private SyncExternalCustomerDataCommand $syncExternalCustomerDataCommand;
-    private CreateCustomerCommand $createCustomerCommand;
-    private UpdateCustomerCommand $updateCustomerCommand;
-    private DeleteCustomerCommand $deleteCustomerCommand;
-
     public function __construct(
-        SyncExternalCustomerDataCommand $syncExternalCustomerDataCommand,
-        CreateCustomerCommand $createCustomerCommand,
-        UpdateCustomerCommand $updateCustomerCommand,
-        DeleteCustomerCommand $deleteCustomerCommand
+        private SyncExternalCustomerDataCommand $syncExternalCustomerDataCommand,
+        private CreateCustomerCommand $createCustomerCommand,
+        private UpdateCustomerCommand $updateCustomerCommand,
+        private DeleteCustomerCommand $deleteCustomerCommand
     ) {
         parent::__construct();
-        $this->syncExternalCustomerDataCommand = $syncExternalCustomerDataCommand;
-        $this->createCustomerCommand = $createCustomerCommand;
-        $this->updateCustomerCommand = $updateCustomerCommand;
-        $this->deleteCustomerCommand = $deleteCustomerCommand;
     }
 
     protected function configure(): void
@@ -58,10 +50,10 @@ class CustomerInteractionCommand extends Command
         $question = new ChoiceQuestion(
             'Please select an action: ',
             [
-                'Sync customer data',
-                'Create a new customer',
-                'Update customer details',
-                'Delete customer',
+                $this->syncExternalCustomerDataCommand->label(),
+                $this->createCustomerCommand->label(),
+                $this->updateCustomerCommand->label(),
+                $this->deleteCustomerCommand->label(),
             ],
             0 // Default choice (index starts from 0)
         );
@@ -70,20 +62,22 @@ class CustomerInteractionCommand extends Command
         // Ask the user for input
         $selectedOption = $helper->ask($input, $output, $question);
 
-        // Handle the user's choice and delegate to the corresponding command
         switch ($selectedOption) {
-            case 'Sync customer data':
-                $this->syncExternalCustomerDataCommand->execute();
-                $output->writeln('<info>Customer data synchronized successfully.</info>');
+            case $this->syncExternalCustomerDataCommand->label():
+                $result = $this->syncExternalCustomerDataCommand->execute(CustomerCommandPayload::empty());
+                $output->writeln(sprintf('<info>%s</info>', $result->message()));
                 break;
-            case 'Create a new customer':
-                $this->createCustomerCommand->execute($input, $output);
+            case $this->createCustomerCommand->label():
+                $result = $this->createCustomerCommand->execute($this->askCreatePayload($input, $output));
+                $output->writeln(sprintf('<info>%s</info>', $result->message()));
                 break;
-            case 'Update customer details':
-                $this->updateCustomerCommand->execute($input, $output);
+            case $this->updateCustomerCommand->label():
+                $result = $this->updateCustomerCommand->execute($this->askUpdatePayload($input, $output));
+                $output->writeln(sprintf('<info>%s</info>', $result->message()));
                 break;
-            case 'Delete customer':
-                $this->deleteCustomerCommand->execute($input, $output);
+            case $this->deleteCustomerCommand->label():
+                $result = $this->deleteCustomerCommand->execute($this->askDeletePayload($input, $output));
+                $output->writeln(sprintf('<info>%s</info>', $result->message()));
                 break;
             default:
                 $output->writeln('<error>Invalid option.</error>');
@@ -91,5 +85,37 @@ class CustomerInteractionCommand extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    private function askCreatePayload(InputInterface $input, OutputInterface $output): CustomerCommandPayload
+    {
+        return CustomerCommandPayload::create(
+            $this->ask($input, $output, 'Please enter customer name: '),
+            $this->ask($input, $output, 'Please enter customer email: ')
+        );
+    }
+
+    private function askUpdatePayload(InputInterface $input, OutputInterface $output): CustomerCommandPayload
+    {
+        return CustomerCommandPayload::update(
+            (int) $this->ask($input, $output, 'Please enter customer ID: '),
+            $this->ask($input, $output, 'Please enter new customer name: '),
+            $this->ask($input, $output, 'Please enter new customer email: ')
+        );
+    }
+
+    private function askDeletePayload(InputInterface $input, OutputInterface $output): CustomerCommandPayload
+    {
+        return CustomerCommandPayload::delete(
+            (int) $this->ask($input, $output, 'Please enter customer ID to delete: ')
+        );
+    }
+
+    private function ask(InputInterface $input, OutputInterface $output, string $question): string
+    {
+        /** @var QuestionHelper $helper */
+        $helper = $this->getHelper('question');
+
+        return (string) $helper->ask($input, $output, new \Symfony\Component\Console\Question\Question($question));
     }
 }

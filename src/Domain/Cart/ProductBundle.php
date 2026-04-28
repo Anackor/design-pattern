@@ -2,6 +2,8 @@
 
 namespace App\Domain\Cart;
 
+use App\Shared\ValueObject\Money;
+
 /**
  * ProductBundle is the "Composite" in the Composite pattern.
  * It can contain multiple products or even other bundles.
@@ -23,12 +25,12 @@ class ProductBundle implements ProductInterface
         return $this->name;
     }
 
-    public function getPrice(): float
+    public function getPrice(): Money
     {
         return array_reduce(
             $this->items,
-            fn(float $total, ProductInterface $item) => $total + $item->getPrice(),
-            0.0
+            fn(Money $total, ProductInterface $item) => $total->add($item->getPrice()),
+            Money::zero()
         );
     }
 }

@@ -12,52 +12,23 @@ class CustomerService
      *
      * This function could involve making API calls, processing data, and handling errors.
      */
-    public function syncCustomerData(): void
+    public function syncCustomerData(): string
     {
-        // Logic for data synchronization with external system
-        // Example: Make an API call, process the response, handle errors, etc.
-        echo 'Customer data synchronized with external system.';
+        return 'Customer data synchronized with external system.';
     }
 
-    /**
-     * Create a new customer.
-     *
-     * @param string $name
-     * @param string $email
-     * @return void
-     */
-    public function createCustomer(string $name, string $email): void
+    public function createCustomer(string $name, string $email): string
     {
-        // Logic to create a new customer in the database
-        // This would typically involve calling a repository method to persist the data
-        echo "Creating User with {$name}.\n";
+        return sprintf('Customer %s <%s> created.', $name, $email);
     }
 
-    /**
-     * Update an existing customer's details.
-     *
-     * @param int $customerId
-     * @param string $newName
-     * @param string $newEmail
-     * @return void
-     */
-    public function updateCustomer(int $customerId, string $newName, string $newEmail): void
+    public function updateCustomer(int $customerId, string $newName, string $newEmail): string
     {
-        // Logic to update an existing customer in the database
-        // This would typically involve calling a repository method to update the customer data
-        echo "Updateng User {$customerId}.";
+        return sprintf('Customer %d updated to %s <%s>.', $customerId, $newName, $newEmail);
     }
 
-    /**
-     * Delete an existing customer.
-     *
-     * @param int $customerId
-     * @return void
-     */
-    public function deleteCustomer(int $customerId): void
+    public function deleteCustomer(int $customerId): string
     {
-        // Logic to delete a customer from the database
-        // This would typically involve calling a repository method to delete the customer
-        echo "Deleting User {$customerId}.";
+        return sprintf('Customer %d deleted.', $customerId);
     }
 }

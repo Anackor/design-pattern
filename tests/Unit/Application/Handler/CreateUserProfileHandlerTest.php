@@ -14,16 +14,13 @@ class CreateUserProfileHandlerTest extends TestCase
 {
     public function testHandleCreatesUserProfile()
     {
-        $userMock = (new User())
-            ->setName('John Smith')
-            ->setEmail('john@example.com')
-            ->setRole(UserRole::ADMIN);
+        $userMock = User::register('John Smith', 'john@example.com', UserRole::ADMIN);
         $userRepository = $this->createMock(UserRepository::class);
         $userProfileRepository = $this->createMock(UserProfileRepository::class);
         $this->assertInstanceOf(UserProfileRepository::class, $userProfileRepository);
 
         // Simulamos que el usuario existe
-        $userRepository->method('findById')->willReturn($userMock);
+        $userRepository->method('registeredUserOfId')->willReturn($userMock);
 
         $handler = new CreateUserProfileHandler($userRepository, $userProfileRepository);
         $dto = new UserProfileDTO(1, '123456789', 'Fake Street 123', '2000-01-01');
@@ -40,11 +37,27 @@ class CreateUserProfileHandlerTest extends TestCase
         $userRepository = $this->createMock(UserRepository::class);
         $profileRepository = $this->createMock(UserProfileRepository::class);
 
-        $userRepository->method('findById')->willReturn(null);
+        $userRepository->method('registeredUserOfId')->willReturn(null);
 
         $handler = new CreateUserProfileHandler($userRepository, $profileRepository);
         $dto = new UserProfileDTO(99, '987654321', 'Unknown Street', '1999-05-15');
 
         $this->assertNull($handler->handle($dto));
+    }
+
+    public function testHandleRejectsIncompleteProfileData(): void
+    {
+        $userRepository = $this->createMock(UserRepository::class);
+        $profileRepository = $this->createMock(UserProfileRepository::class);
+
+        $userRepository->method('registeredUserOfId')->willReturn(User::register('John Smith', 'john@example.com'));
+
+        $handler = new CreateUserProfileHandler($userRepository, $profileRepository);
+        $dto = new UserProfileDTO(1, null, 'Fake Street 123', '2000-01-01');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('User profile data is incomplete.');
+
+        $handler->handle($dto);
     }
 }

@@ -29,6 +29,14 @@ class Category
         $this->products = new ArrayCollection();
     }
 
+    public static function named(string $name): self
+    {
+        $category = new self();
+        $category->setName($name);
+
+        return $category;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -41,7 +49,13 @@ class Category
 
     public function setName(string $name): static
     {
-        $this->name = $name;
+        $normalized = trim($name);
+
+        if ('' === $normalized) {
+            throw new \InvalidArgumentException('Category name cannot be empty.');
+        }
+
+        $this->name = $normalized;
 
         return $this;
     }

@@ -22,7 +22,7 @@ class CreateDocumentHandler
         $document = new Document($title, $user);
         new DocumentVersion($document, $content);
 
-        $this->documentRepository->save($document);
+        $this->documentRepository->store($document);
 
         return $document;
     }
