@@ -20,6 +20,14 @@ services:
             - '../src/Domain/Entity/'
             - '../src/Kernel.php'
 
+    Psr\Log\LoggerInterface:
+        alias: App\Infrastructure\Observability\StructuredFileLogger
+
+    App\Infrastructure\Observability\StructuredFileLogger:
+        arguments:
+            $logFilePath: '%kernel.logs_dir%/observability.log'
+            $channel: 'application'
+
     # Add validator as service (not necessary if using autowiring)
     App\Application\Validator\Constraints\CategoryExistsValidator:
         tags: ['validator.constraint_validator']
@@ -40,8 +48,8 @@ services:
 
     App\Application\BuilderUserProfile\CreateUserProfileHandler:
         arguments:
-            - '@App\Domain\Repository\UserRepositoryInterface'
-            - '@App\Domain\Repository\UserProfileRepositoryInterface'
+            $userRepository: '@App\Domain\Repository\UserRepositoryInterface'
+            $userProfileRepository: '@App\Domain\Repository\UserProfileRepositoryInterface'
 
     App\Domain\Repository\UserRepositoryInterface:
         alias: App\Infrastructure\Persistence\DoctrineUserRepository

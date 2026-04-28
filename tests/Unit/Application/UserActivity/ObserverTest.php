@@ -7,21 +7,16 @@ use App\Application\UserActivity\UserActionSubject;
 use App\Application\UserActivity\UserAction;
 use App\Application\UserActivity\Observer\ActivityLogger;
 use App\Application\UserActivity\Observer\UserMetricsTracker;
-use Psr\Log\LoggerInterface;
+use App\Tests\Support\InMemoryLogger;
 
 class ObserverTest extends TestCase
 {
-    public function testObserversReceiveUserAction()
+    public function testObserversReceiveUserAction(): void
     {
         $subject = new UserActionSubject();
+        $loggerSpy = new InMemoryLogger();
 
-        // Mock del logger
-        $loggerMock = $this->createMock(LoggerInterface::class);
-        $loggerMock->expects($this->once())
-            ->method('info')
-            ->with($this->stringContains('user-123 performed login'));
-
-        $logger = new ActivityLogger($loggerMock);
+        $logger = new ActivityLogger($loggerSpy);
         $tracker = new UserMetricsTracker();
 
         $subject->attach($logger);
@@ -31,6 +26,10 @@ class ObserverTest extends TestCase
         $subject->notify($action);
 
         $this->assertEquals(1, $tracker->getUserActionCount('user-123', 'login'));
+        $this->assertCount(1, $loggerSpy->records);
+        $this->assertSame('user.activity.recorded', $loggerSpy->records[0]['message']);
+        $this->assertSame('observer', $loggerSpy->records[0]['context']['pattern']);
+        $this->assertSame('user-123', $loggerSpy->records[0]['context']['user_id']);
     }
 
     public function testDetachPreventsNotification()

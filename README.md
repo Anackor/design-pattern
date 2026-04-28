@@ -97,6 +97,22 @@ The initial quality tooling is intentionally pragmatic:
 - Deptrac is configured as an architectural diagnostic, not as a required bundle gate yet
 - Coverage is generated under `var/coverage`
 
+## Observability
+
+The project now includes a small didactic structured logger that writes JSON lines to `var/log/observability.log`.
+
+It is intentionally applied only where observability teaches something real:
+
+- `CreateUserProfileHandler`: logs start, user-not-found, invalid payload and success.
+- `SendNotificationHandler`: logs outbound notification attempts, resolved channel and failures.
+- `ActivityLogger`: turns the Observer example into a structured logging sidecar.
+
+The rules are part of the lesson:
+
+- event names stay stable and machine-friendly, for example `user_profile.create.started`;
+- useful metadata goes into context instead of string concatenation;
+- sensitive payloads are minimized, so we log identifiers, lengths or masked receivers rather than full content.
+
 ## Repository structure
 
 ```text
