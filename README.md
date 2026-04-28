@@ -122,6 +122,10 @@ make observability-demo
 
 That command clears `var/log/observability.log`, triggers Observer and notification flows, and prints the JSON records generated in that run.
 
+## Code Tour
+
+Use [CODE-TOUR.md](CODE-TOUR.md) for a short guided walkthrough built only on commands and tests that are currently verified in this repository.
+
 ## Repository structure
 
 ```text
