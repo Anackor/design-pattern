@@ -2,31 +2,20 @@
 
 namespace App\Domain\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity]
-#[ORM\Table(name: 'category')]
 class Category
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     /**
-     * @var Collection<int, Product>
+     * @var iterable<int, Product>
      */
-    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category')]
-    private Collection $products;
+    private iterable $products;
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
+        $this->products = [];
     }
 
     public static function named(string $name): self
@@ -61,17 +50,17 @@ class Category
     }
 
     /**
-     * @return Collection<int, Product>
+     * @return list<Product>
      */
-    public function getProducts(): Collection
+    public function getProducts(): array
     {
-        return $this->products;
+        return $this->iterableToArray($this->products);
     }
 
     public function addProduct(Product $product): static
     {
-        if (!$this->products->contains($product)) {
-            $this->products->add($product);
+        if (!$this->containsProduct($product)) {
+            $this->products = $this->appendProduct($this->products, $product);
             $product->setCategory($this);
         }
 
@@ -80,7 +69,9 @@ class Category
 
     public function removeProduct(Product $product): static
     {
-        if ($this->products->removeElement($product)) {
+        if ($this->containsProduct($product)) {
+            $this->products = $this->withoutProduct($this->products, $product);
+
             // set the owning side to null (unless already changed)
             if ($product->getCategory() === $this) {
                 $product->setCategory(null);
@@ -88,5 +79,66 @@ class Category
         }
 
         return $this;
+    }
+
+    private function containsProduct(Product $candidate): bool
+    {
+        foreach ($this->products as $product) {
+            if ($product === $candidate) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param iterable<int, Product> $products
+     */
+    private function appendProduct(iterable $products, Product $product): iterable
+    {
+        if (is_object($products) && method_exists($products, 'add')) {
+            $products->add($product);
+
+            return $products;
+        }
+
+        $buffer = $this->iterableToArray($products);
+        $buffer[] = $product;
+
+        return $buffer;
+    }
+
+    /**
+     * @param iterable<int, Product> $products
+     */
+    private function withoutProduct(iterable $products, Product $candidate): iterable
+    {
+        if (is_object($products) && method_exists($products, 'removeElement')) {
+            $products->removeElement($candidate);
+
+            return $products;
+        }
+
+        return array_values(array_filter(
+            $this->iterableToArray($products),
+            static fn(Product $product): bool => $product !== $candidate
+        ));
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param iterable<int, T> $items
+     *
+     * @return list<T>
+     */
+    private function iterableToArray(iterable $items): array
+    {
+        if (is_array($items)) {
+            return array_values($items);
+        }
+
+        return array_values(iterator_to_array($items, false));
     }
 }

@@ -4,6 +4,18 @@ deptrac:
   exclude_files:
     - '#.*Test.*#'
   layers:
+    - name: Bootstrap
+      collectors:
+        - type: classLike
+          value: App\\Kernel
+    - name: Command
+      collectors:
+        - type: directory
+          value: src/Command/.*
+    - name: DataFixtures
+      collectors:
+        - type: directory
+          value: src/DataFixtures/.*
     - name: Domain
       collectors:
         - type: directory
@@ -24,18 +36,60 @@ deptrac:
       collectors:
         - type: directory
           value: src/Shared/.*
+    - name: FrameworkSymfony
+      collectors:
+        - type: classLike
+          value: Symfony\\.*
+    - name: PersistenceDoctrine
+      collectors:
+        - type: classLike
+          value: Doctrine\\.*
+    - name: ExternalAws
+      collectors:
+        - type: classLike
+          value: Aws\\.*
+    - name: TemplateTwig
+      collectors:
+        - type: classLike
+          value: Twig\\.*
+    - name: LoggingPsr
+      collectors:
+        - type: classLike
+          value: Psr\\Log\\.*
   ruleset:
-    Domain: [Shared]
+    Bootstrap:
+      - FrameworkSymfony
+    Command:
+      - Application
+      - Shared
+      - FrameworkSymfony
+    DataFixtures:
+      - Domain
+      - Shared
+      - PersistenceDoctrine
+    Domain:
+      - Shared
     Application:
       - Domain
       - Shared
+      - FrameworkSymfony
+      - LoggingPsr
     Infrastructure:
       - Application
       - Domain
       - Shared
+      - PersistenceDoctrine
+      - ExternalAws
+      - TemplateTwig
+      - LoggingPsr
     Presentation:
       - Application
       - Domain
-      - Infrastructure
       - Shared
+      - FrameworkSymfony
     Shared: ~
+    FrameworkSymfony: ~
+    PersistenceDoctrine: ~
+    ExternalAws: ~
+    TemplateTwig: ~
+    LoggingPsr: ~

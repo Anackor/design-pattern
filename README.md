@@ -100,7 +100,9 @@ The initial quality tooling is intentionally pragmatic:
 
 - PHPStan runs at an achievable starting level
 - PHP CS Fixer is available as a formatter gate and fixer
-- Deptrac is configured as an architectural diagnostic, not as a required bundle gate yet
+- Deptrac now models the main internal layers plus key external boundaries such as Symfony, Doctrine, AWS and PSR logging
+- Doctrine mapping for persisted domain entities now lives under `config/doctrine`, which keeps ORM metadata out of `src/Domain`
+- `make deptrac` remains useful as a local architectural diagnostic, while `make deptrac-check` is the strict gate used by the pull-request bundle
 - Coverage is generated under `var/coverage`
 
 For pull requests, the repository also exposes a stricter local bundle through `make pr-checks`.

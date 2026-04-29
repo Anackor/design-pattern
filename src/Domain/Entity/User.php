@@ -6,53 +6,37 @@ use App\Domain\Enum\UserRole;
 use App\Domain\Flyweight\Country;
 use App\Domain\Flyweight\UserType;
 use App\Shared\ValueObject\Email;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
-#[ORM\Table(name: 'users')]
 class User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
-    #[ORM\Column(type: 'string', unique: true)]
     private string $email;
 
-    #[ORM\Column(type: 'string', unique: false)]
     private string $country;
 
-    #[ORM\Column(type: 'string', unique: false)]
     private string $type;
 
-    #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
     private ?UserProfile $userProfile = null;
 
-    #[ORM\Column(enumType: UserRole::class)]
     private UserRole $role;
 
     /**
-     * @var Collection<int, UserOrders>
+     * @var iterable<int, UserOrders>
      */
-    #[ORM\OneToMany(targetEntity: UserOrders::class, mappedBy: 'user_id', orphanRemoval: true)]
-    private Collection $userOrders;
+    private iterable $userOrders;
 
     /**
-     * @var Collection<int, Document>
+     * @var iterable<int, Document>
      */
-    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'user', orphanRemoval: true)]
-    private Collection $documents;
+    private iterable $documents;
 
     public function __construct()
     {
-        $this->userOrders = new ArrayCollection();
-        $this->documents = new ArrayCollection();
+        $this->userOrders = [];
+        $this->documents = [];
         $this->country = 'unknown';
         $this->type = 'standard';
         $this->role = UserRole::USER;
@@ -147,17 +131,17 @@ class User
     }
 
     /**
-     * @return Collection<int, UserOrders>
+     * @return list<UserOrders>
      */
-    public function getUserOrders(): Collection
+    public function getUserOrders(): array
     {
-        return $this->userOrders;
+        return $this->iterableToArray($this->userOrders);
     }
 
     public function addUserOrder(UserOrders $userOrder): static
     {
-        if (!$this->userOrders->contains($userOrder)) {
-            $this->userOrders->add($userOrder);
+        if (!$this->containsUserOrder($userOrder)) {
+            $this->userOrders = $this->appendUserOrder($this->userOrders, $userOrder);
             $userOrder->setUserId($this);
         }
 
@@ -166,7 +150,9 @@ class User
 
     public function removeUserOrder(UserOrders $userOrder): static
     {
-        if ($this->userOrders->removeElement($userOrder)) {
+        if ($this->containsUserOrder($userOrder)) {
+            $this->userOrders = $this->withoutUserOrder($this->userOrders, $userOrder);
+
             // set the owning side to null (unless already changed)
             if ($userOrder->getUserId() === $this) {
                 $userOrder->setUserId(null);
@@ -189,17 +175,17 @@ class User
     }
 
     /**
-     * @return Collection<int, Document>
+     * @return list<Document>
      */
-    public function getDocuments(): Collection
+    public function getDocuments(): array
     {
-        return $this->documents;
+        return $this->iterableToArray($this->documents);
     }
 
     public function addDocument(Document $document): static
     {
-        if (!$this->documents->contains($document)) {
-            $this->documents->add($document);
+        if (!$this->containsDocument($document)) {
+            $this->documents = $this->appendDocument($this->documents, $document);
             $document->setUser($this);
         }
 
@@ -208,7 +194,9 @@ class User
 
     public function removeDocument(Document $document): static
     {
-        if ($this->documents->removeElement($document)) {
+        if ($this->containsDocument($document)) {
+            $this->documents = $this->withoutDocument($this->documents, $document);
+
             // set the owning side to null (unless already changed)
             if ($document->getUser() === $this) {
                 $document->setUser(null);
@@ -237,5 +225,111 @@ class User
     private function normalizeType(string $type): string
     {
         return UserType::fromString($type)->getType();
+    }
+
+    private function containsUserOrder(UserOrders $candidate): bool
+    {
+        foreach ($this->userOrders as $userOrder) {
+            if ($userOrder === $candidate) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param iterable<int, UserOrders> $userOrders
+     */
+    private function appendUserOrder(iterable $userOrders, UserOrders $userOrder): iterable
+    {
+        if (is_object($userOrders) && method_exists($userOrders, 'add')) {
+            $userOrders->add($userOrder);
+
+            return $userOrders;
+        }
+
+        $buffer = $this->iterableToArray($userOrders);
+        $buffer[] = $userOrder;
+
+        return $buffer;
+    }
+
+    /**
+     * @param iterable<int, UserOrders> $userOrders
+     */
+    private function withoutUserOrder(iterable $userOrders, UserOrders $candidate): iterable
+    {
+        if (is_object($userOrders) && method_exists($userOrders, 'removeElement')) {
+            $userOrders->removeElement($candidate);
+
+            return $userOrders;
+        }
+
+        return array_values(array_filter(
+            $this->iterableToArray($userOrders),
+            static fn(UserOrders $userOrder): bool => $userOrder !== $candidate
+        ));
+    }
+
+    private function containsDocument(Document $candidate): bool
+    {
+        foreach ($this->documents as $document) {
+            if ($document === $candidate) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param iterable<int, Document> $documents
+     */
+    private function appendDocument(iterable $documents, Document $document): iterable
+    {
+        if (is_object($documents) && method_exists($documents, 'add')) {
+            $documents->add($document);
+
+            return $documents;
+        }
+
+        $buffer = $this->iterableToArray($documents);
+        $buffer[] = $document;
+
+        return $buffer;
+    }
+
+    /**
+     * @param iterable<int, Document> $documents
+     */
+    private function withoutDocument(iterable $documents, Document $candidate): iterable
+    {
+        if (is_object($documents) && method_exists($documents, 'removeElement')) {
+            $documents->removeElement($candidate);
+
+            return $documents;
+        }
+
+        return array_values(array_filter(
+            $this->iterableToArray($documents),
+            static fn(Document $document): bool => $document !== $candidate
+        ));
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param iterable<int, T> $items
+     *
+     * @return list<T>
+     */
+    private function iterableToArray(iterable $items): array
+    {
+        if (is_array($items)) {
+            return array_values($items);
+        }
+
+        return array_values(iterator_to_array($items, false));
     }
 }
