@@ -2,29 +2,16 @@
 
 namespace App\Domain\Entity;
 
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity]
-#[ORM\Table(name: 'document_version')]
 class DocumentVersion
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Document::class, inversedBy: 'versions')]
-    #[ORM\JoinColumn(nullable: false)]
     private Document $document;
 
-    #[ORM\Column(type: Types::TEXT)]
     private string $content;
 
-    #[ORM\Column(type: Types::STRING, unique: true)]
     private string $versionCode;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
     public function __construct(Document $document, string $content)

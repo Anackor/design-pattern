@@ -3,28 +3,17 @@
 namespace App\Domain\Entity;
 
 use App\Shared\ValueObject\Money;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
-#[ORM\Table(name: 'product')]
 class Product
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
     private string $name;
 
-    #[ORM\Column]
     private float $price;
 
-    #[ORM\Column(type: Types::TEXT)]
     private string $description;
 
-    #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $category = null;
 
     public function __construct(

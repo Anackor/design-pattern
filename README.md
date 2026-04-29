@@ -61,6 +61,8 @@ Application endpoints are exposed at:
 - `make shell`: open a shell in the PHP container
 - `make console CONSOLE_ARGS="lint:container"`: run Symfony console commands
 - `make composer COMPOSER_ARGS="validate"`: run Composer commands inside Docker
+- `make composer-validate`: validate `composer.json` through the Docker toolchain
+- `make lint-container`: lint the Symfony service container
 - `make test-unit`: run the unit suite only
 - `make test-integration`: run the integration suite only
 - `make test-functional`: run the functional HTTP suite only
@@ -69,8 +71,10 @@ Application endpoints are exposed at:
 - `make cs`: run the formatter in dry-run mode
 - `make cs-fix`: apply formatting fixes
 - `make deptrac`: run architectural diagnostics
+- `make deptrac-check`: run Deptrac as a failing quality gate
 - `make coverage`: generate coverage output in `var/coverage`
 - `make quality`: run the base quality gate bundle
+- `make pr-checks`: run the pull-request quality bundle locally
 - `make stop`: stop and remove the stack
 
 If you do not use `make`, the equivalent Docker command shape is:
@@ -96,8 +100,14 @@ The initial quality tooling is intentionally pragmatic:
 
 - PHPStan runs at an achievable starting level
 - PHP CS Fixer is available as a formatter gate and fixer
-- Deptrac is configured as an architectural diagnostic, not as a required bundle gate yet
+- Deptrac now models the main internal layers plus key external boundaries such as Symfony, Doctrine, AWS and PSR logging
+- Doctrine mapping for persisted domain entities now lives under `config/doctrine`, which keeps ORM metadata out of `src/Domain`
+- `make deptrac` remains useful as a local architectural diagnostic, while `make deptrac-check` is the strict gate used by the pull-request bundle
 - Coverage is generated under `var/coverage`
+
+For pull requests, the repository also exposes a stricter local bundle through `make pr-checks`.
+That bundle is designed to mirror the GitHub Actions workflow and includes Composer validation,
+container linting, static analysis, style checks, a strict Deptrac run and the split test suites.
 
 ## Observability
 
@@ -126,6 +136,15 @@ That command clears `var/log/observability.log`, triggers Observer and notificat
 ## Code Tour
 
 Use [CODE-TOUR.md](CODE-TOUR.md) for a short guided walkthrough built only on commands and tests that are currently verified in this repository.
+
+If you are reviewing the project for the first time, the recommended order is:
+
+1. `make observability-demo`
+2. `make test-unit PHPUNIT_ARGS="tests/Unit/Presentation/BuilderUserProfileControllerTest.php"`
+3. `make test-functional`
+4. `make test-unit PHPUNIT_ARGS="tests/Unit/Application/Handler/SendNotificationHandlerTest.php"`
+
+That path shows the repository first as an application with observable use cases and a real HTTP boundary. The rest of the pattern catalogue makes more sense after that first pass.
 
 ## Functional HTTP layer
 
@@ -181,6 +200,9 @@ docs/planning/      Refactor roadmap and review notes
 ## Design patterns currently represented
 
 This project is intentionally hybrid: some patterns support the HTTP/API flow, and others are didactic examples designed to be small, executable and easy to study.
+
+If your goal is architectural evaluation, start with the rows marked `Application flow`.
+If your goal is pattern study, use the `Didactic executable` rows afterwards as a guided catalogue.
 
 | Pattern | Main example | Intent | Status |
 | --- | --- | --- | --- |

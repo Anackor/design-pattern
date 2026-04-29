@@ -8,7 +8,7 @@ CONSOLE_ARGS ?=
 COMPOSER_ARGS ?=
 PHPUNIT_ARGS ?=
 
-.PHONY: build start stop logs ps shell console composer install test test-unit test-integration test-functional observability-demo phpstan cs cs-fix deptrac coverage quality db migrate
+.PHONY: build start stop logs ps shell console composer composer-validate install lint-container test test-unit test-integration test-functional observability-demo phpstan cs cs-fix deptrac deptrac-check coverage quality pr-checks db migrate
 
 build:
 	$(COMPOSE) build
@@ -34,8 +34,14 @@ console:
 composer:
 	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer $(COMPOSER_ARGS)"
 
+composer-validate:
+	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer validate"
+
 install:
 	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer install"
+
+lint-container:
+	$(COMPOSE) run --rm $(APP_SERVICE) php bin/console lint:container
 
 test:
 	$(COMPOSE) run --rm $(APP_SERVICE) php vendor/bin/phpunit $(PHPUNIT_ARGS)
@@ -64,10 +70,15 @@ cs-fix:
 deptrac:
 	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer qa:deptrac || true"
 
+deptrac-check:
+	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; composer qa:deptrac"
+
 coverage:
 	$(COMPOSE) run --rm $(APP_SERVICE) sh -lc "git config --global --add safe.directory $(APP_WORKDIR) >/dev/null 2>&1 || true; mkdir -p $(COVERAGE_DIR) && composer qa:coverage"
 
 quality: phpstan cs test
+
+pr-checks: composer-validate lint-container phpstan cs deptrac-check test-unit test-integration test-functional
 
 db:
 	$(COMPOSE) exec $(DB_SERVICE) mysql -u api_user -papi_pass api_db

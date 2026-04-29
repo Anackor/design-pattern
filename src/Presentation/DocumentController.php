@@ -103,7 +103,7 @@ class DocumentController
         return [
             'id' => $document->getId(),
             'title' => $document->getTitle(),
-            'version_count' => $document->getVersions()->count(),
+            'version_count' => count($document->getVersions()),
         ];
     }
 

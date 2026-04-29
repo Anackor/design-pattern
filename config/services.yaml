@@ -82,6 +82,9 @@ services:
     App\Application\Factory\NotificationFactoryInterface:
         alias: App\Application\Factory\NotificationFactory
 
+    App\Application\Template\TemplateRendererInterface:
+        alias: App\Infrastructure\Template\TwigTemplateRenderer
+
     App\Application\File\FileStorageResolverInterface:
         alias: App\Infrastructure\FileStorage\FileStorageResolver
 

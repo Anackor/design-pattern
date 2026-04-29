@@ -5,8 +5,8 @@ namespace App\Tests\Unit\Application\Template;
 use App\Application\DTO\RenderTemplateDTO;
 use App\Application\Singleton\EmailTemplateRegistry;
 use App\Application\Template\RenderEmailTemplateHandler;
+use App\Application\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
-use Twig\Environment;
 
 class RenderEmailTemplateHandlerTest extends TestCase
 {
@@ -24,13 +24,13 @@ class RenderEmailTemplateHandlerTest extends TestCase
     {
         EmailTemplateRegistry::getInstance()->register('invoice', 'emails/invoice.html.twig');
 
-        $twig = $this->createMock(Environment::class);
-        $twig->expects($this->once())
+        $renderer = $this->createMock(TemplateRendererInterface::class);
+        $renderer->expects($this->once())
             ->method('render')
             ->with('emails/invoice.html.twig', ['name' => 'Alice'])
             ->willReturn('<h1>Alice</h1>');
 
-        $handler = new RenderEmailTemplateHandler($twig);
+        $handler = new RenderEmailTemplateHandler($renderer);
 
         $this->assertSame(
             '<h1>Alice</h1>',
