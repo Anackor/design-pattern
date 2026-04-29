@@ -137,6 +137,15 @@ That command clears `var/log/observability.log`, triggers Observer and notificat
 
 Use [CODE-TOUR.md](CODE-TOUR.md) for a short guided walkthrough built only on commands and tests that are currently verified in this repository.
 
+If you are reviewing the project for the first time, the recommended order is:
+
+1. `make observability-demo`
+2. `make test-unit PHPUNIT_ARGS="tests/Unit/Presentation/BuilderUserProfileControllerTest.php"`
+3. `make test-functional`
+4. `make test-unit PHPUNIT_ARGS="tests/Unit/Application/Handler/SendNotificationHandlerTest.php"`
+
+That path shows the repository first as an application with observable use cases and a real HTTP boundary. The rest of the pattern catalogue makes more sense after that first pass.
+
 ## Functional HTTP layer
 
 The repository now includes a first functional HTTP suite under `tests/Functional`.
@@ -191,6 +200,9 @@ docs/planning/      Refactor roadmap and review notes
 ## Design patterns currently represented
 
 This project is intentionally hybrid: some patterns support the HTTP/API flow, and others are didactic examples designed to be small, executable and easy to study.
+
+If your goal is architectural evaluation, start with the rows marked `Application flow`.
+If your goal is pattern study, use the `Didactic executable` rows afterwards as a guided catalogue.
 
 | Pattern | Main example | Intent | Status |
 | --- | --- | --- | --- |

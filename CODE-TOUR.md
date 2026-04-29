@@ -2,7 +2,14 @@
 
 This guide only points to commands and tests that are already verified in the current repository state. The goal is not to describe every pattern at once, but to give a short route that can be executed, inspected and understood step by step.
 
-## Stop 1: Observability in action
+## Two tracks
+
+- Core path: start here if you want to review the repository as a small application with HTTP entrypoints, use cases, observability and persistence boundaries.
+- Pattern gallery: use these extra stops afterwards if you want to study more isolated pattern examples without losing time in the first pass.
+
+## Core path
+
+### Stop 1: Observability in action
 
 Run:
 
@@ -24,7 +31,7 @@ Read next:
 - `src/Application/UserActivity/Observer/ActivityLogger.php`
 - `src/Application/Notification/SendNotificationHandler.php`
 
-## Stop 2: Builder flow from HTTP to domain
+### Stop 2: Builder flow from HTTP to domain
 
 Run:
 
@@ -47,7 +54,7 @@ Read next:
 - `src/Domain/Builder/UserProfileBuilder.php`
 - `src/Domain/Entity/UserProfile.php`
 
-## Stop 3: Functional HTTP boundary
+### Stop 3: Functional HTTP boundary
 
 Run:
 
@@ -76,7 +83,7 @@ Read next:
 - `src/Presentation/EventSubscriber/JsonApiExceptionSubscriber.php`
 - `src/Presentation/NotificationController.php`
 
-## Stop 4: Factory Method plus outbound observability
+### Stop 4: Factory Method plus outbound observability
 
 Run:
 
@@ -98,7 +105,7 @@ Read next:
 - `src/Application/DTO/NotificationRequestDTO.php`
 - `src/Domain/Notification/NotificationInterface.php`
 
-## Stop 5: Observer as a logging sidecar
+### Stop 5: Observer as a logging sidecar
 
 Run:
 
@@ -120,6 +127,75 @@ Read next:
 - `src/Application/UserActivity/Observer/ActivityLogger.php`
 - `src/Application/UserActivity/Observer/UserMetricsTracker.php`
 
+## Pattern gallery
+
+### Stop 6: Prototype in catalog cloning
+
+Run:
+
+```sh
+make test-unit PHPUNIT_ARGS="tests/Unit/Application/Prototype/ProductClonerTest.php"
+```
+
+What this shows:
+
+- A cloned product keeps the original untouched.
+- Overrides stay explicit instead of leaking into a long constructor call.
+- The pattern appears inside an application-oriented catalog use case, not as a disconnected toy example.
+
+Read next:
+
+- `src/Application/Prototype/ProductCloner.php`
+- `src/Application/Prototype/ProductCloneOverrides.php`
+- `src/Domain/Entity/Product.php`
+- `tests/Unit/Application/Handler/CloneProductHandlerTest.php`
+
+### Stop 7: Adapter at the file storage boundary
+
+Run:
+
+```sh
+make test-functional PHPUNIT_ARGS="tests/Functional/Presentation/FileStorageControllerFunctionalTest.php"
+```
+
+What this shows:
+
+- One HTTP contract can drive local, FTP or S3 storage behind the same application boundary.
+- The controller only knows DTO validation and response shape, not storage implementation details.
+- Adapter becomes easier to understand when seen through the functional tests that protect the boundary.
+
+Read next:
+
+- `src/Presentation/FileStorageController.php`
+- `src/Application/File/UploadFileHandler.php`
+- `src/Application/File/DownloadFileHandler.php`
+- `src/Application/File/DeleteFileHandler.php`
+- `src/Infrastructure/FileStorage/FileStorageResolver.php`
+- `src/Infrastructure/FileStorage/LocalFileStorageAdapter.php`
+- `src/Infrastructure/FileStorage/FtpStorageAdapter.php`
+- `src/Infrastructure/FileStorage/AwsS3StorageAdapter.php`
+
+### Stop 8: Flyweight as normalized shared state
+
+Run:
+
+```sh
+make test-unit PHPUNIT_ARGS="tests/Unit/Domain/Flyweight/FlyweightFactoryTest.php"
+```
+
+What this shows:
+
+- Repeated country and user type values are normalized before reuse.
+- The factories make the memory-sharing idea visible without hiding the normalization rule.
+- This is a good pattern stop to read after the core path because it is intentionally more didactic than infrastructural.
+
+Read next:
+
+- `src/Domain/Flyweight/Country.php`
+- `src/Domain/Flyweight/CountryFlyweightFactory.php`
+- `src/Domain/Flyweight/UserType.php`
+- `src/Domain/Flyweight/UserTypeFlyweightFactory.php`
+
 ## Suggested order
 
 1. Run the observability demo first to see something tangible.
@@ -127,11 +203,14 @@ Read next:
 3. Run the functional HTTP suite to see the same boundary exercised through the kernel.
 4. Move to notifications to see Factory Method plus outbound logging.
 5. Finish with Observer to understand how observability can be attached as a side effect.
+6. Continue with Prototype, Adapter and Flyweight only after the core path is clear.
 
 ## Why this tour exists
 
-The repository contains many patterns, but not all of them carry the same teaching value at the same time. This tour intentionally prioritizes examples that satisfy three conditions:
+The repository contains many patterns, but not all of them carry the same teaching value at the same time. The core path intentionally prioritizes examples that satisfy three conditions:
 
 - they execute with a real command or focused test;
 - they show more than one architectural layer at once;
 - they help explain the current technical goals: confidence, observability and a more trustworthy HTTP boundary.
+
+The optional gallery then broadens the tour with smaller, more pattern-centered examples once the main application route is already familiar.
