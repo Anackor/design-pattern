@@ -5,6 +5,9 @@ namespace App\Tests\Unit\Presentation;
 use App\Application\DTO\NotificationRequestDTO;
 use App\Application\Notification\SendNotificationHandler;
 use App\Presentation\NotificationController;
+use App\Presentation\Http\ApiResponseFactory;
+use App\Presentation\Http\JsonRequestDecoder;
+use App\Presentation\Http\ValidationErrorFormatter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -26,7 +29,12 @@ class NotificationControllerTest extends TestCase
                     && $dto->getChannel() === 'email';
             }));
 
-        $controller = new NotificationController($handler, $this->createValidator());
+        $controller = new NotificationController(
+            $handler,
+            $this->createValidator(),
+            new JsonRequestDecoder(),
+            $this->apiResponseFactory()
+        );
         $response = $controller->sendNotification($this->jsonRequest([
             'title' => 'Hello',
             'receiver' => 'mail@example.com',
@@ -35,12 +43,21 @@ class NotificationControllerTest extends TestCase
         ]));
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame(['message' => 'Notification sent successfully'], json_decode((string) $response->getContent(), true));
+        $this->assertSame([
+            'status' => 'success',
+            'message' => 'Notification sent successfully',
+            'data' => [],
+        ], json_decode((string) $response->getContent(), true));
     }
 
     public function testSendNotificationThrowsBadRequestWhenPayloadIsMissing(): void
     {
-        $controller = new NotificationController($this->createMock(SendNotificationHandler::class), $this->createValidator());
+        $controller = new NotificationController(
+            $this->createMock(SendNotificationHandler::class),
+            $this->createValidator(),
+            new JsonRequestDecoder(),
+            $this->apiResponseFactory()
+        );
 
         $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessage('Missing required parameters.');
@@ -52,7 +69,9 @@ class NotificationControllerTest extends TestCase
     {
         $controller = new NotificationController(
             $this->createMock(SendNotificationHandler::class),
-            $this->createValidator($this->violationList('Invalid channel.'))
+            $this->createValidator($this->violationList('Invalid channel.')),
+            new JsonRequestDecoder(),
+            $this->apiResponseFactory()
         );
 
         $response = $controller->sendNotification($this->jsonRequest([
@@ -63,7 +82,16 @@ class NotificationControllerTest extends TestCase
         ]));
 
         $this->assertSame(400, $response->getStatusCode());
-        $this->assertStringContainsString('Validation failed', (string) $response->getContent());
+        $this->assertSame([
+            'status' => 'error',
+            'message' => 'Validation failed',
+            'error' => [
+                'type' => 'validation_failed',
+                'details' => [
+                    ['field' => 'payload', 'message' => 'Invalid channel.'],
+                ],
+            ],
+        ], json_decode((string) $response->getContent(), true));
     }
 
     public function testSendNotificationReturnsServerErrorWhenHandlerFails(): void
@@ -71,7 +99,12 @@ class NotificationControllerTest extends TestCase
         $handler = $this->createMock(SendNotificationHandler::class);
         $handler->method('handle')->willThrowException(new \RuntimeException('Transport unavailable.'));
 
-        $controller = new NotificationController($handler, $this->createValidator());
+        $controller = new NotificationController(
+            $handler,
+            $this->createValidator(),
+            new JsonRequestDecoder(),
+            $this->apiResponseFactory()
+        );
         $response = $controller->sendNotification($this->jsonRequest([
             'title' => 'Hello',
             'receiver' => 'mail@example.com',
@@ -80,7 +113,11 @@ class NotificationControllerTest extends TestCase
         ]));
 
         $this->assertSame(500, $response->getStatusCode());
-        $this->assertSame(['error' => 'Transport unavailable.'], json_decode((string) $response->getContent(), true));
+        $this->assertSame([
+            'status' => 'error',
+            'message' => 'Transport unavailable.',
+            'error' => ['type' => 'internal_server_error'],
+        ], json_decode((string) $response->getContent(), true));
     }
 
     private function createValidator(?ConstraintViolationList $violations = null): ValidatorInterface
@@ -93,7 +130,7 @@ class NotificationControllerTest extends TestCase
 
     private function jsonRequest(array $data): Request
     {
-        return new Request([], [], [], [], [], [], json_encode($data, JSON_THROW_ON_ERROR));
+        return new Request([], [], [], [], [], [], json_encode([] === $data ? new \stdClass() : $data, JSON_THROW_ON_ERROR));
     }
 
     private function violationList(string $message): ConstraintViolationList
@@ -101,5 +138,10 @@ class NotificationControllerTest extends TestCase
         return new ConstraintViolationList([
             new ConstraintViolation($message, null, [], null, 'payload', null),
         ]);
+    }
+
+    private function apiResponseFactory(): ApiResponseFactory
+    {
+        return new ApiResponseFactory(new ValidationErrorFormatter());
     }
 }

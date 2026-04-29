@@ -16,34 +16,27 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class NotificationRequestDTO
 {
-    /**
-     * @Assert\NotBlank(message="Title cannot be empty.")
-     * @Assert\Length(
-     *     max=54,
-     *     maxMessage="Title cannot be longer than {{ limit }} characters."
-     * )
-     */
+    #[Assert\NotBlank(message: 'Title cannot be empty.')]
+    #[Assert\Length(
+        max: 54,
+        maxMessage: 'Title cannot be longer than {{ limit }} characters.'
+    )]
     private string $title;
 
-    /**
-     * @Assert\NotBlank(message="Message cannot be empty.")
-     */
+    #[Assert\NotBlank(message: 'Message cannot be empty.')]
     private string $message;
 
-    /**
-     * @Assert\NotBlank(message="Receiver cannot be empty.")
-     */
+    #[Assert\NotBlank(message: 'Receiver cannot be empty.')]
     private string $receiver;
 
     /**
      * The channel must be one of the predefined options.
      * We dynamically extract the allowed values using NotificationChannel::values().
-     *
-     * @Assert\Choice(
-     *     callback={NotificationChannel::class, "values"},
-     *     message="Invalid channel '{{ value }}'."
-     * )
      */
+    #[Assert\Choice(
+        callback: [NotificationChannel::class, 'values'],
+        message: "Invalid channel '{{ value }}'."
+    )]
     private string $channel;
 
     public function __construct(

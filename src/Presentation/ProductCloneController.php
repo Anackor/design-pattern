@@ -4,7 +4,10 @@ namespace App\Presentation;
 
 use App\Application\DTO\ProductCloneDTO;
 use App\Application\Product\CloneProductHandler;
+use App\Presentation\Http\ApiResponseFactory;
+use App\Presentation\Http\JsonRequestDecoder;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -13,13 +16,15 @@ class ProductCloneController
 {
     public function __construct(
         private CloneProductHandler $handler,
-        private ValidatorInterface $validator
+        private ValidatorInterface $validator,
+        private JsonRequestDecoder $jsonRequestDecoder,
+        private ApiResponseFactory $apiResponseFactory
     ) {}
 
     #[Route('/products/{id}/clone', methods: ['POST'])]
     public function clone(int $id, Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = $this->jsonRequestDecoder->decodeObject($request);
 
         $dto = new ProductCloneDTO(
             $id,
@@ -31,17 +36,18 @@ class ProductCloneController
 
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
-            return new JsonResponse(['errors' => (string) $errors], 400);
+            return $this->apiResponseFactory->validationError($errors);
         }
 
         try {
             $clonedProduct = $this->handler->handle($dto);
-            return new JsonResponse([
-                'message' => 'Product cloned successfully',
-                'product_id' => $clonedProduct->getId(),
-            ], 201);
+            return $this->apiResponseFactory->success(
+                'Product cloned successfully',
+                ['product_id' => $clonedProduct->getId()],
+                Response::HTTP_CREATED
+            );
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => $e->getMessage()], 500);
+            return $this->apiResponseFactory->httpError(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
     }
 }
