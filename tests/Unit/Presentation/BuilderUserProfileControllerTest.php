@@ -6,6 +6,9 @@ use App\Application\BuilderUserProfile\CreateUserProfileHandler;
 use App\Domain\Entity\User;
 use App\Domain\Entity\UserProfile;
 use App\Presentation\BuilderUserProfileController;
+use App\Presentation\Http\ApiResponseFactory;
+use App\Presentation\Http\JsonRequestDecoder;
+use App\Presentation\Http\ValidationErrorFormatter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -28,7 +31,12 @@ class BuilderUserProfileControllerTest extends TestCase
             ->method('handle')
             ->willReturn($profile);
 
-        $controller = new BuilderUserProfileController($handler, $this->createValidator());
+        $controller = new BuilderUserProfileController(
+            $handler,
+            $this->createValidator(),
+            new JsonRequestDecoder(),
+            $this->apiResponseFactory()
+        );
         $response = $controller->createProfile(5, $this->jsonRequest([
             'phone' => '+34600000000',
             'address' => 'Main Street 1',
@@ -36,20 +44,35 @@ class BuilderUserProfileControllerTest extends TestCase
         ]));
 
         $this->assertSame(201, $response->getStatusCode());
-        $this->assertSame(['message' => 'Profile created', 'id' => null], json_decode((string) $response->getContent(), true));
+        $this->assertSame([
+            'status' => 'success',
+            'message' => 'Profile created',
+            'data' => ['id' => null],
+        ], json_decode((string) $response->getContent(), true));
     }
 
     public function testCreateProfileReturnsValidationErrors(): void
     {
         $controller = new BuilderUserProfileController(
             $this->createMock(CreateUserProfileHandler::class),
-            $this->createValidator($this->violationList('Invalid profile data.'))
+            $this->createValidator($this->violationList('Invalid profile data.')),
+            new JsonRequestDecoder(),
+            $this->apiResponseFactory()
         );
 
         $response = $controller->createProfile(5, $this->jsonRequest([]));
 
         $this->assertSame(400, $response->getStatusCode());
-        $this->assertStringContainsString('Invalid profile data.', (string) $response->getContent());
+        $this->assertSame([
+            'status' => 'error',
+            'message' => 'Validation failed',
+            'error' => [
+                'type' => 'validation_failed',
+                'details' => [
+                    ['field' => 'payload', 'message' => 'Invalid profile data.'],
+                ],
+            ],
+        ], json_decode((string) $response->getContent(), true));
     }
 
     public function testCreateProfileReturnsNotFoundWhenHandlerReturnsNull(): void
@@ -57,7 +80,12 @@ class BuilderUserProfileControllerTest extends TestCase
         $handler = $this->createMock(CreateUserProfileHandler::class);
         $handler->method('handle')->willReturn(null);
 
-        $controller = new BuilderUserProfileController($handler, $this->createValidator());
+        $controller = new BuilderUserProfileController(
+            $handler,
+            $this->createValidator(),
+            new JsonRequestDecoder(),
+            $this->apiResponseFactory()
+        );
         $response = $controller->createProfile(5, $this->jsonRequest([
             'phone' => '+34600000000',
             'address' => 'Main Street 1',
@@ -65,7 +93,11 @@ class BuilderUserProfileControllerTest extends TestCase
         ]));
 
         $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame(['error' => 'User not found'], json_decode((string) $response->getContent(), true));
+        $this->assertSame([
+            'status' => 'error',
+            'message' => 'User not found',
+            'error' => ['type' => 'not_found'],
+        ], json_decode((string) $response->getContent(), true));
     }
 
     private function createValidator(?ConstraintViolationList $violations = null): ValidatorInterface
@@ -78,7 +110,7 @@ class BuilderUserProfileControllerTest extends TestCase
 
     private function jsonRequest(array $data): Request
     {
-        return new Request([], [], [], [], [], [], json_encode($data, JSON_THROW_ON_ERROR));
+        return new Request([], [], [], [], [], [], json_encode([] === $data ? new \stdClass() : $data, JSON_THROW_ON_ERROR));
     }
 
     private function violationList(string $message): ConstraintViolationList
@@ -86,5 +118,10 @@ class BuilderUserProfileControllerTest extends TestCase
         return new ConstraintViolationList([
             new ConstraintViolation($message, null, [], null, 'payload', null),
         ]);
+    }
+
+    private function apiResponseFactory(): ApiResponseFactory
+    {
+        return new ApiResponseFactory(new ValidationErrorFormatter());
     }
 }

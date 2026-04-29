@@ -6,10 +6,13 @@ use App\Application\DTO\FileOperationRequestDTO;
 use App\Application\File\UploadFileHandler;
 use App\Application\File\DownloadFileHandler;
 use App\Application\File\DeleteFileHandler;
-use Symfony\Component\HttpFoundation\Request;
+use App\Presentation\Http\ApiResponseFactory;
+use App\Presentation\Http\JsonRequestDecoder;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class FileStorageController
@@ -18,7 +21,9 @@ class FileStorageController
         private UploadFileHandler $uploadHandler,
         private DownloadFileHandler $downloadHandler,
         private DeleteFileHandler $deleteHandler,
-        private ValidatorInterface $validator
+        private ValidatorInterface $validator,
+        private JsonRequestDecoder $jsonRequestDecoder,
+        private ApiResponseFactory $apiResponseFactory
     ) {}
 
     /**
@@ -26,32 +31,29 @@ class FileStorageController
      * By centralizing the validation logic, we avoid code duplication across controllers,
      * ensure consistent error handling, and improve maintainability.
      */
-    private function validateDto(object $dto): void
+    private function validateDto(object $dto): ConstraintViolationListInterface
     {
-        $errors = $this->validator->validate($dto);
-        if (count($errors) > 0) {
-            $messages = [];
-            foreach ($errors as $error) {
-                $messages[] = $error->getPropertyPath() . ': ' . $error->getMessage();
-            }
-            throw new BadRequestHttpException(implode(', ', $messages));
-        }
+        return $this->validator->validate($dto);
     }
 
     #[Route('/file/upload', methods: ['POST'])]
     public function upload(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = $this->jsonRequestDecoder->decodeObject($request);
 
         if (!isset($data['adapter'], $data['path'], $data['contents'])) {
             throw new BadRequestHttpException('Missing required parameters.');
         }
 
         $dto = new FileOperationRequestDTO($data['adapter'], $data['path'], $data['contents']);
-        $this->validateDto($dto);
+        $errors = $this->validateDto($dto);
+        if (count($errors) > 0) {
+            return $this->apiResponseFactory->validationError($errors);
+        }
+
         $this->uploadHandler->handle($dto);
 
-        return new JsonResponse(['message' => 'File uploaded successfully']);
+        return $this->apiResponseFactory->success('File uploaded successfully');
     }
 
     #[Route('/file/download', methods: ['GET'])]
@@ -65,27 +67,33 @@ class FileStorageController
         }
 
         $dto = new FileOperationRequestDTO($adapter, $path);
-        $this->validateDto($dto);
+        $errors = $this->validateDto($dto);
+        if (count($errors) > 0) {
+            return $this->apiResponseFactory->validationError($errors);
+        }
 
         $contents = $this->downloadHandler->handle($dto);
 
-        return new JsonResponse(['contents' => $contents]);
+        return $this->apiResponseFactory->success('File downloaded successfully', ['contents' => $contents]);
     }
 
     #[Route('/file/delete', methods: ['DELETE'])]
     public function delete(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = $this->jsonRequestDecoder->decodeObject($request);
 
         if (!isset($data['adapter'], $data['path'])) {
             throw new BadRequestHttpException('Missing required parameters.');
         }
 
         $dto = new FileOperationRequestDTO($data['adapter'], $data['path']);
-        $this->validateDto($dto);
+        $errors = $this->validateDto($dto);
+        if (count($errors) > 0) {
+            return $this->apiResponseFactory->validationError($errors);
+        }
 
         $this->deleteHandler->handle($dto);
 
-        return new JsonResponse(['message' => 'File deleted successfully']);
+        return $this->apiResponseFactory->success('File deleted successfully');
     }
 }

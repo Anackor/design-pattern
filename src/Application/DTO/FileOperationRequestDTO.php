@@ -6,9 +6,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class FileOperationRequestDTO
 {
+    #[Assert\NotBlank(message: 'Adapter cannot be empty.')]
     #[Assert\Choice(['aws', 's3', 'ftp', 'local'])]
     public string $adapter;
 
+    #[Assert\NotBlank(message: 'Path cannot be empty.')]
     #[Assert\Type('string')]
     public string $path;
 

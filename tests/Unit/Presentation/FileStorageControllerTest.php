@@ -6,6 +6,9 @@ use App\Application\File\DeleteFileHandler;
 use App\Application\File\DownloadFileHandler;
 use App\Application\File\UploadFileHandler;
 use App\Presentation\FileStorageController;
+use App\Presentation\Http\ApiResponseFactory;
+use App\Presentation\Http\JsonRequestDecoder;
+use App\Presentation\Http\ValidationErrorFormatter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -28,7 +31,11 @@ class FileStorageControllerTest extends TestCase
         ]));
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame(['message' => 'File uploaded successfully'], json_decode((string) $response->getContent(), true));
+        $this->assertSame([
+            'status' => 'success',
+            'message' => 'File uploaded successfully',
+            'data' => [],
+        ], json_decode((string) $response->getContent(), true));
     }
 
     public function testUploadThrowsBadRequestWhenPayloadIsMissing(): void
@@ -55,7 +62,11 @@ class FileStorageControllerTest extends TestCase
         ]));
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame(['contents' => 'downloaded'], json_decode((string) $response->getContent(), true));
+        $this->assertSame([
+            'status' => 'success',
+            'message' => 'File downloaded successfully',
+            'data' => ['contents' => 'downloaded'],
+        ], json_decode((string) $response->getContent(), true));
     }
 
     public function testDownloadThrowsBadRequestWhenQueryIsMissing(): void
@@ -80,23 +91,36 @@ class FileStorageControllerTest extends TestCase
         ]));
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame(['message' => 'File deleted successfully'], json_decode((string) $response->getContent(), true));
+        $this->assertSame([
+            'status' => 'success',
+            'message' => 'File deleted successfully',
+            'data' => [],
+        ], json_decode((string) $response->getContent(), true));
     }
 
-    public function testValidationErrorsAreReportedAsBadRequest(): void
+    public function testValidationErrorsAreReportedAsStructuredResponse(): void
     {
         $controller = $this->createController(
             validator: $this->createValidator($this->violationList('adapter', 'Unsupported adapter.'))
         );
 
-        $this->expectException(BadRequestHttpException::class);
-        $this->expectExceptionMessage('adapter: Unsupported adapter.');
-
-        $controller->upload($this->jsonRequest([
+        $response = $controller->upload($this->jsonRequest([
             'adapter' => 'azure',
             'path' => '/tmp/file.txt',
             'contents' => 'hello',
         ]));
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame([
+            'status' => 'error',
+            'message' => 'Validation failed',
+            'error' => [
+                'type' => 'validation_failed',
+                'details' => [
+                    ['field' => 'adapter', 'message' => 'Unsupported adapter.'],
+                ],
+            ],
+        ], json_decode((string) $response->getContent(), true));
     }
 
     private function createController(
@@ -109,7 +133,9 @@ class FileStorageControllerTest extends TestCase
             $uploadHandler ?? $this->createMock(UploadFileHandler::class),
             $downloadHandler ?? $this->createMock(DownloadFileHandler::class),
             $deleteHandler ?? $this->createMock(DeleteFileHandler::class),
-            $validator ?? $this->createValidator()
+            $validator ?? $this->createValidator(),
+            new JsonRequestDecoder(),
+            $this->apiResponseFactory()
         );
     }
 
@@ -123,7 +149,7 @@ class FileStorageControllerTest extends TestCase
 
     private function jsonRequest(array $data): Request
     {
-        return new Request([], [], [], [], [], [], json_encode($data, JSON_THROW_ON_ERROR));
+        return new Request([], [], [], [], [], [], json_encode([] === $data ? new \stdClass() : $data, JSON_THROW_ON_ERROR));
     }
 
     private function violationList(string $propertyPath, string $message): ConstraintViolationList
@@ -131,5 +157,10 @@ class FileStorageControllerTest extends TestCase
         return new ConstraintViolationList([
             new ConstraintViolation($message, null, [], null, $propertyPath, null),
         ]);
+    }
+
+    private function apiResponseFactory(): ApiResponseFactory
+    {
+        return new ApiResponseFactory(new ValidationErrorFormatter());
     }
 }

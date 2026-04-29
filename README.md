@@ -63,6 +63,7 @@ Application endpoints are exposed at:
 - `make composer COMPOSER_ARGS="validate"`: run Composer commands inside Docker
 - `make test-unit`: run the unit suite only
 - `make test-integration`: run the integration suite only
+- `make test-functional`: run the functional HTTP suite only
 - `make observability-demo`: generate and print a reproducible structured logging demo
 - `make phpstan`: run the base static analysis profile
 - `make cs`: run the formatter in dry-run mode
@@ -126,6 +127,42 @@ That command clears `var/log/observability.log`, triggers Observer and notificat
 
 Use [CODE-TOUR.md](CODE-TOUR.md) for a short guided walkthrough built only on commands and tests that are currently verified in this repository.
 
+## Functional HTTP layer
+
+The repository now includes a first functional HTTP suite under `tests/Functional`.
+
+It boots the Symfony kernel directly and validates behavior that unit tests alone cannot guarantee:
+
+- route matching and controller wiring;
+- real DTO validation through Symfony's validator;
+- JSON request decoding at the HTTP boundary;
+- JSON error responses for malformed requests.
+
+The current suite exercises representative endpoints across the API surface, including:
+
+- profile creation;
+- notification delivery;
+- OAuth configuration lookup;
+- document creation and content updates;
+- file upload, download and deletion;
+- form rendering, product cloning, template rendering and user retrieval.
+
+Run the suite with:
+
+```sh
+make test-functional
+```
+
+## HTTP contract
+
+The API now standardizes responses around one small envelope:
+
+- success responses expose `status`, `message` and `data`;
+- error responses expose `status`, `message` and an `error` block;
+- validation failures add `error.details` as a list of `{field, message}` items.
+
+That contract is intentionally didactic: it is small enough to understand quickly, but strong enough to show why stable response shapes matter once an API grows beyond a handful of controllers.
+
 ## Repository structure
 
 ```text
@@ -137,7 +174,7 @@ src/
 config/             Symfony configuration
 docker/             Docker source of truth
 migrations/         Doctrine migrations
-tests/              PHPUnit test suite split into Unit/ and Integration/
+tests/              PHPUnit test suite split into Unit/, Integration/ and Functional/
 docs/planning/      Refactor roadmap and review notes
 ```
 

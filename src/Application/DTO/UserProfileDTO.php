@@ -15,10 +15,13 @@ class UserProfileDTO
     public function __construct(
         #[Assert\NotBlank]
         public int $userId,
+        #[Assert\NotBlank(message: 'Phone cannot be empty.')]
         #[Assert\Length(min: 9, max: 15)]
         public ?string $phone = null,
+        #[Assert\NotBlank(message: 'Address cannot be empty.')]
         #[Assert\Length(min: 5)]
         public ?string $address = null,
+        #[Assert\NotBlank(message: 'Birthdate cannot be empty.')]
         #[Assert\Date]
         public ?string $birthdate = null
     ) {}

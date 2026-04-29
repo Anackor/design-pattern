@@ -47,7 +47,36 @@ Read next:
 - `src/Domain/Builder/UserProfileBuilder.php`
 - `src/Domain/Entity/UserProfile.php`
 
-## Stop 3: Factory Method plus outbound observability
+## Stop 3: Functional HTTP boundary
+
+Run:
+
+```sh
+make test-functional
+```
+
+What this shows:
+
+- the Symfony kernel handles real HTTP requests in test mode;
+- controllers are reached through routing, not direct method calls;
+- DTO validation now runs with the framework validator, not with mocked results;
+- malformed JSON and missing parameters return stable JSON error payloads;
+- success and error responses now share one explicit envelope.
+
+Read next:
+
+- `tests/Functional/Support/JsonHttpKernelTestCase.php`
+- `tests/Functional/Presentation/NotificationControllerFunctionalTest.php`
+- `tests/Functional/Presentation/DocumentControllerFunctionalTest.php`
+- `tests/Functional/Presentation/FileStorageControllerFunctionalTest.php`
+- `tests/Functional/Presentation/FormControllerFunctionalTest.php`
+- `src/Presentation/Http/ApiResponseFactory.php`
+- `src/Presentation/Http/ValidationErrorFormatter.php`
+- `src/Presentation/Http/JsonRequestDecoder.php`
+- `src/Presentation/EventSubscriber/JsonApiExceptionSubscriber.php`
+- `src/Presentation/NotificationController.php`
+
+## Stop 4: Factory Method plus outbound observability
 
 Run:
 
@@ -69,7 +98,7 @@ Read next:
 - `src/Application/DTO/NotificationRequestDTO.php`
 - `src/Domain/Notification/NotificationInterface.php`
 
-## Stop 4: Observer as a logging sidecar
+## Stop 5: Observer as a logging sidecar
 
 Run:
 
@@ -95,8 +124,9 @@ Read next:
 
 1. Run the observability demo first to see something tangible.
 2. Open the Builder flow to follow a full request-to-domain path.
-3. Move to notifications to see Factory Method plus outbound logging.
-4. Finish with Observer to understand how observability can be attached as a side effect.
+3. Run the functional HTTP suite to see the same boundary exercised through the kernel.
+4. Move to notifications to see Factory Method plus outbound logging.
+5. Finish with Observer to understand how observability can be attached as a side effect.
 
 ## Why this tour exists
 
@@ -104,4 +134,4 @@ The repository contains many patterns, but not all of them carry the same teachi
 
 - they execute with a real command or focused test;
 - they show more than one architectural layer at once;
-- they help explain current phase-3 goals: confidence, coverage and observability.
+- they help explain the current technical goals: confidence, observability and a more trustworthy HTTP boundary.

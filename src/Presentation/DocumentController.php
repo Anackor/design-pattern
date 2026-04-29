@@ -6,15 +6,23 @@ use App\Application\DTO\CreateDocumentDTO;
 use App\Application\DTO\UpdateDocumentDTO;
 use App\Application\Document\CreateDocumentHandler;
 use App\Application\Document\UpdateDocumentContentHandler;
+use App\Domain\Entity\Document;
+use App\Domain\Entity\DocumentVersion;
+use App\Presentation\Http\ApiResponseFactory;
+use App\Presentation\Http\JsonRequestDecoder;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DocumentController
 {
     public function __construct(
-        private ValidatorInterface $validator
+        private ValidatorInterface $validator,
+        private JsonRequestDecoder $jsonRequestDecoder,
+        private ApiResponseFactory $apiResponseFactory
     ) {}
 
     #[Route('/documents', name: 'document_create', methods: ['POST'])]
@@ -22,7 +30,11 @@ class DocumentController
         Request $request,
         CreateDocumentHandler $handler
     ): JsonResponse {
-        $data = json_decode($request->getContent(), true);
+        $data = $this->jsonRequestDecoder->decodeObject($request);
+
+        if (!isset($data['title'], $data['content'], $data['userID'])) {
+            throw new BadRequestHttpException('Missing required parameters.');
+        }
 
         $dto = new CreateDocumentDTO(
             $data['title'],
@@ -33,14 +45,18 @@ class DocumentController
 
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
-            return new JsonResponse(['error' => (string) $errors], 400);
+            return $this->apiResponseFactory->validationError($errors);
         }
 
         try {
             $document = $handler->handle($dto);
-            return new JsonResponse(['document' => $document]);
+            return $this->apiResponseFactory->success(
+                'Document created',
+                ['document' => $this->serializeDocument($document)],
+                Response::HTTP_CREATED
+            );
         } catch (\InvalidArgumentException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], 400);
+            return $this->apiResponseFactory->httpError(Response::HTTP_BAD_REQUEST, $e->getMessage());
         }
     }
 
@@ -50,7 +66,11 @@ class DocumentController
         Request $request,
         UpdateDocumentContentHandler $handler
     ): JsonResponse {
-        $data = json_decode($request->getContent(), true);
+        $data = $this->jsonRequestDecoder->decodeObject($request);
+
+        if (!isset($data['content'])) {
+            throw new BadRequestHttpException('Missing required parameters.');
+        }
 
         $dto = new UpdateDocumentDTO(
             $id,
@@ -59,14 +79,47 @@ class DocumentController
 
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
-            return new JsonResponse(['error' => (string) $errors], 400);
+            return $this->apiResponseFactory->validationError($errors);
         }
 
         try {
             $version = $handler->handle($dto);
-            return new JsonResponse(['version' => $version]);
+            return $this->apiResponseFactory->success('Document content updated', [
+                'version' => $this->serializeVersion($version),
+            ]);
         } catch (\InvalidArgumentException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], 400);
+            return $this->apiResponseFactory->httpError(Response::HTTP_BAD_REQUEST, $e->getMessage());
         }
+    }
+
+    /**
+     * The controller exposes a transport-friendly snapshot instead of the raw
+     * Doctrine entity so the HTTP contract stays explicit and stable.
+     *
+     * @return array{id: ?int, title: ?string, version_count: int}
+     */
+    private function serializeDocument(Document $document): array
+    {
+        return [
+            'id' => $document->getId(),
+            'title' => $document->getTitle(),
+            'version_count' => $document->getVersions()->count(),
+        ];
+    }
+
+    /**
+     * Returning a summarized version payload keeps the response useful without
+     * coupling callers to the full internal shape of the entity.
+     *
+     * @return array{id: ?int, document_id: ?int, version_code: string, created_at: string}
+     */
+    private function serializeVersion(DocumentVersion $version): array
+    {
+        return [
+            'id' => $version->getId(),
+            'document_id' => $version->getDocument()->getId(),
+            'version_code' => $version->getVersionCode(),
+            'created_at' => $version->getCreatedAt()->format(\DATE_ATOM),
+        ];
     }
 }
