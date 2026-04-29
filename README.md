@@ -61,6 +61,8 @@ Application endpoints are exposed at:
 - `make shell`: open a shell in the PHP container
 - `make console CONSOLE_ARGS="lint:container"`: run Symfony console commands
 - `make composer COMPOSER_ARGS="validate"`: run Composer commands inside Docker
+- `make composer-validate`: validate `composer.json` through the Docker toolchain
+- `make lint-container`: lint the Symfony service container
 - `make test-unit`: run the unit suite only
 - `make test-integration`: run the integration suite only
 - `make test-functional`: run the functional HTTP suite only
@@ -69,8 +71,10 @@ Application endpoints are exposed at:
 - `make cs`: run the formatter in dry-run mode
 - `make cs-fix`: apply formatting fixes
 - `make deptrac`: run architectural diagnostics
+- `make deptrac-check`: run Deptrac as a failing quality gate
 - `make coverage`: generate coverage output in `var/coverage`
 - `make quality`: run the base quality gate bundle
+- `make pr-checks`: run the pull-request quality bundle locally
 - `make stop`: stop and remove the stack
 
 If you do not use `make`, the equivalent Docker command shape is:
@@ -98,6 +102,10 @@ The initial quality tooling is intentionally pragmatic:
 - PHP CS Fixer is available as a formatter gate and fixer
 - Deptrac is configured as an architectural diagnostic, not as a required bundle gate yet
 - Coverage is generated under `var/coverage`
+
+For pull requests, the repository also exposes a stricter local bundle through `make pr-checks`.
+That bundle is designed to mirror the GitHub Actions workflow and includes Composer validation,
+container linting, static analysis, style checks, a strict Deptrac run and the split test suites.
 
 ## Observability
 

@@ -1,0 +1,48 @@
+name: PR Checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pr-checks:
+    name: PR Quality Gate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Docker Compose configuration
+        run: docker compose -f docker/docker-compose.yml config
+
+      - name: Build application image
+        run: make build
+
+      - name: Install dependencies inside Docker
+        run: make install
+
+      - name: Start and wait for MySQL
+        run: |
+          docker compose -f docker/docker-compose.yml up -d mysql
+          for attempt in $(seq 1 15); do
+            status=$(docker inspect --format='{{.State.Health.Status}}' mysql)
+            if [ "$status" = "healthy" ]; then
+              echo "MySQL is ready."
+              exit 0
+            fi
+
+            echo "Waiting for MySQL to become ready..."
+            sleep 2
+          done
+
+          echo "MySQL did not become ready in time."
+          docker compose -f docker/docker-compose.yml logs mysql
+          exit 1
+
+      - name: Run pull-request quality bundle
+        run: make pr-checks
+
+      - name: Stop Docker services
+        if: always()
+        run: make stop
